@@ -1,0 +1,126 @@
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-gradient);
+  color: var(--text-primary);
+}
+
+.sidebar {
+  width: 280px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid var(--glass-border);
+  padding: 2.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 100;
+  overflow-y: auto; /* Enable scrolling for sidebar content */
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accent-primary);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.nav-button {
+  background: transparent;
+  border: none;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.nav-button:hover {
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--accent-primary);
+  transform: translateX(5px);
+}
+
+.nav-button.active {
+  background: white;
+  color: var(--accent-primary);
+  box-shadow: var(--shadow-soft);
+}
+
+.main-content {
+  flex: 1;
+  padding: 3rem;
+  overflow-y: auto;
+}
+
+.header {
+  margin-bottom: 3rem;
+}
+
+.header h1 {
+  font-size: 3rem;
+  margin: 0;
+  background: linear-gradient(to right, #1a202c, #3182ce);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+.header p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+}
+
+.content-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.content-inner:has(#genealogy-tree) {
+  max-width: none;
+}
+
+.karte-gallery {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  padding-bottom: 5rem;
+}
+
+@media (max-width: 1024px) {
+  .app-container {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 1.5rem;
+    border-right: none;
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .nav-links {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+  .main-content {
+    padding: 1.5rem;
+  }
+}

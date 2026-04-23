@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@300;400;600;700&display=swap');
+
+:root {
+  --primary: #c084fc;
+  --secondary: #6366f1;
+  --accent: #f472b6;
+  --background: #0f172a;
+  --surface: #1e293b;
+  --text: #f8fafc;
+  --text-dim: #94a3b8;
+  --glass: rgba(30, 41, 59, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-attachment: fixed;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  width: 100%;
+}
+
+h1, h2, h3, .shinso-number {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+.title-serif {
+  font-family: var(--font-serif);
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  box-shadow: var(--shadow-glass);
+  padding: 2rem;
+}
+
+.btn-primary {
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 15px -3px rgba(192, 132, 252, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 25px -5px rgba(192, 132, 252, 0.4);
+}
+
+.input-field {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  color: white;
+  font-family: inherit;
+  width: 100%;
+  margin-bottom: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+/* ブラウザのデフォルト印刷ヘッダー（Localhost, 日付, URLなど）を非表示にする */
+@media print {
+  /* Vite等の開発サーバーがbody末尾に注入する要素が白紙ページを誘発するバグを防止 */
+  body > *:not(#root) {
+    display: none !important;
+  }
+
+  html, body, #root, .batch-print-container {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* デフォルトのページサイズをA4縦に指定（名前付きページバグ回避のため） */
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  @page landscape-view {
+    size: A4 landscape;
+    margin: 10mm;
+  }
+
+  @page portrait-view-bleed {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  @page landscape-view-bleed {
+    size: A4 landscape;
+    margin: 0;
+  }
+
+  /* 縦向き用のコンテナ（余白あり・デフォルト設定を利用するため page 指定なし） */
+  .batch-page-portrait {
+    background: white;
+    height: 275mm !important;
+    max-height: 275mm !important;
+    overflow: hidden !important;
+    position: relative;
+    box-sizing: border-box;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* 横向き用のコンテナ（余白あり） */
+  .batch-page-landscape {
+    page: landscape-view;
+    background: white;
+    height: 188mm !important;
+    max-height: 188mm !important;
+    overflow: hidden !important;
+    position: relative;
+    box-sizing: border-box;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* 縦向き用のコンテナ（余白なし: 表紙用） */
+  .batch-page-portrait-bleed {
+    page: portrait-view-bleed;
+    background: white;
+    height: 295mm !important;
+    max-height: 295mm !important;
+    overflow: hidden !important;
+    position: relative;
+    box-sizing: border-box;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* 横向き用のコンテナ（余白なし: 家系図用） */
+  .batch-page-landscape-bleed {
+    page: landscape-view-bleed;
+    background: white;
+    height: 208mm !important;
+    max-height: 208mm !important;
+    overflow: hidden !important;
+    position: relative;
+    box-sizing: border-box;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* 明示的な強制改ページ（オリエンテーション混在時のChromeの二重改ページを避けるため、各同方向連続時にのみbreakする等ではなくシンプルにコンテナ後要素で分ける） */
+  .batch-print-container > div {
+    page-break-after: always;
+    break-after: page;
+  }
+
+  /* 最後のページ後は改ページしない */
+  .batch-print-container > div:last-child {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  /* 内部要素が外側の改ページを誘発しないようにフタをする */
+  .batch-print-container * {
+    page-break-after: auto;
+    break-after: auto;
+    page-break-before: auto;
+    break-before: auto;
+  }
+
+  /* 上書き防止のため !important でコンテナの改ページを保護 */
+  .batch-print-container > div {
+    page-break-after: always !important;
+    break-after: page !important;
+  }
+  .batch-print-container > div:last-child {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  /* 一括印刷時は入力フォームやボタン類を強制的に非表示にする */
+  .batch-print-container .print-hide {
+    display: none !important;
+  }
+}

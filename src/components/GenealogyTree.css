@@ -1,0 +1,361 @@
+/* ===== Genealogy Tree - Reference Image Layout ===== */
+.genealogy-tree-container {
+  padding: 48px 24px;
+  background: white;
+  color: #222;
+  font-family: "Hiragino Kaku Gothic Pro", "Yu Gothic", sans-serif;
+  overflow-x: auto;
+  position: relative;
+  min-height: 100vh;
+}
+
+.tree-lines-svg {
+  position: absolute;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+}
+
+.gt-title {
+  text-align: center;
+  font-size: 39px; /* 1.6rem */
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  margin: 0 0 7.5px; /* 0.3rem */
+  color: #1a202c;
+}
+.gt-legend {
+  text-align: center;
+  font-size: 16.5px; /* 0.7rem */
+  color: #666;
+  margin: 0 0 48px; /* 2rem */
+}
+
+/* Tree Layout */
+.print-content-wrapper {
+  position: relative;
+  width: max-content;
+  margin: 0 auto;
+  transform-origin: top center;
+}
+
+.gt-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 48px; /* 2rem */
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  width: max-content;
+  padding: 0 12px; /* 0.5rem */
+}
+
+.gt-tree-top {
+  gap: 36px; /* 1.5rem */
+  margin-bottom: 48px; /* 2rem */
+}
+
+.family-side {
+  gap: 72px; /* 3rem */
+}
+
+.gp-row {
+  gap: 192px; /* 8rem */
+}
+
+.gt-row {
+  display: flex;
+  justify-content: center;
+  gap: 36px; /* 1.5rem */
+}
+.gp-row {
+  gap: 12px; /* 0.5rem */
+}
+.parent-row {
+  gap: 288px; /* 12rem */
+}
+.couple-row {
+  gap: 48px; /* 2rem */
+}
+.children-row {
+  gap: 24px; /* 1rem */
+  flex-wrap: wrap;
+}
+
+.gt-pair {
+  display: flex;
+  align-items: flex-end;
+  gap: 7.5px; /* 0.3rem */
+}
+.parent-pair {
+  gap: 48px; /* Specifically open distance between father and mother as requested */
+}
+.couple-pair {
+  gap: 192px; /* 8rem */
+}
+
+/* ===== Node ===== */
+.tree-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 97.5px;
+  position: relative;
+}
+.tree-node.side-left {
+  margin-left: 72px; /* Defines safe space for side-area so nothing ever overlaps */
+}
+.tree-node.side-right {
+  margin-right: 72px; /* Defines safe space for side-area */
+}
+.tree-node.empty {
+  opacity: 0.5;
+}
+.tree-node.hero .node-main-box {
+  border: 3px solid #059669;
+  background: #f0fdf4;
+}
+.tree-node.hero .shinso-rect {
+  border-color: #059669;
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.node-title-label {
+  font-size: 14.4px;
+  font-weight: 700;
+  color: #555;
+  margin-bottom: 3px;
+  white-space: nowrap;      /* 改行させない */
+  overflow: visible;        /* 省略せずはみ出して表示する */
+  width: 100%;
+  text-align: center;
+}
+
+.node-main-box {
+  width: 102px;
+  height: 116px; /* Lock exact height against arbitrary print text scaling */
+  background: #fff;
+  border: 1.5px solid #999;
+  padding: 4.5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.5px;
+}
+
+.shinso-rect {
+  width: 100%;
+  height: 36px;
+  border: 3px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #222;
+  background: #fafafa;
+}
+
+.node-sub-row {
+  display: flex;
+  align-items: center;
+  gap: 4.5px;
+  margin-top: 1.5px;
+}
+
+.group-box {
+  width: 21px; height: 21px;
+  border: 1.5px solid #333;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13.200000000000001px; font-weight: 700;
+}
+.rhythm-circle {
+  width: 21px; height: 21px;
+  border: 1.5px solid #333;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13.200000000000001px; font-weight: 700;
+}
+.circ-val {
+  font-size: 13.200000000000001px; font-weight: 700; color: #333;
+}
+
+.basic-num {
+  font-size: 12px; font-weight: 700; color: #333;
+}
+
+.conception-row {
+  display: flex; gap: 1.5px;
+  font-size: 10.8px; font-weight: 600; color: #666;
+}
+
+.node-body-layout {
+  display: flex;
+  position: relative;
+}
+.side-left .node-body-layout {
+  flex-direction: row-reverse;
+}
+
+.node-side-area {
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 67.5px;
+}
+.side-right .node-side-area {
+  left: 100%;
+  margin-left: 4.5px;
+}
+.side-left .node-side-area {
+  right: 100%;
+  margin-right: 4.5px;
+  align-items: flex-end;
+}
+
+.node-side-name {
+  font-size: 13.2px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 3px;
+  max-width: 67.5px;
+  white-space: nowrap;      /* 改行させない */
+  overflow: visible;        /* 省略せずはみ出して表示する */
+}
+
+.binary-sequence-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5px;
+}
+.binary-seq-item {
+  font-size: 10.8px;
+  color: #666;
+}
+
+.empty-placeholder {
+  font-size: 14.4px;
+  color: #aaa;
+  padding: 9px 0;
+  text-align: center;
+}
+
+/* Combined Badge */
+.combined-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 45px;
+  gap: 1.5px;
+}
+.combined-badge.empty-badge {
+  min-width: 15px;
+}
+.combined-shinso {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a365d;
+}
+.combined-basic {
+  font-size: 13.2px;
+  font-weight: 700;
+  color: #555;
+}
+
+/* Footer */
+.gt-footer {
+  text-align: right;
+  font-size: 16.5px; /* 0.7rem */
+  color: #999;
+  margin-top: 72px; /* 3rem */
+  padding: 24px 0; /* 1rem */
+  border-top: 1.5px solid #ddd;
+}
+
+/* Responsive */
+@media screen and (max-width: 900px) {
+  .gt-tree { min-width: 1125px; }
+}
+
+/* Print Copyright - Hidden normally */
+.print-copyright {
+  display: none;
+  text-align: right;
+  font-size: 15px;
+  color: #555;
+  margin-top: 24px; /* 1rem */
+  padding-right: 48px; /* 2rem */
+}
+
+.print-content-wrapper {
+  position: relative;
+  width: max-content;
+  margin: 0 auto;
+}
+
+@media print {
+  .genealogy-tree-container {
+    overflow: hidden !important;
+  }
+  .genealogy-tree-container::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  /* サイドバーや非印刷要素を非表示 */
+  .sidebar, .print-hide {
+    display: none !important;
+  }
+
+  /* メインコンテンツを全幅に */
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  /* 背景色を印刷に反映 */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  #print-family-name {
+    display: inline !important;
+  }
+
+  .print-absolute-wrapper {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 0;
+  }
+
+  .print-copyright {
+    display: block;
+    position: absolute;
+    bottom: -15px; /* -30pxから縮小して2枚目への影響を抑制 */
+    right: 0;
+  }
+
+  .genealogy-print-memo {
+    position: absolute !important;
+    top: 480px !important; /* 自分や配偶者の少し上から開始 */
+    left: 20px !important;
+    width: calc(100% - 40px) !important;
+    height: 380px !important; /* 用紙の下までしっかり確保 */
+    max-height: none !important;
+    column-count: 2;
+    /* 真ん中のツリー部分を大きく避け、テキストを左右に押しやる */
+    column-gap: calc(100% - 320px); /* 左右の列幅を160pxずつ（合計320px）に制限し、中央のツリーに被らないようにする */
+    text-align: left;
+  }
+
+  .genealogy-print-memo h4 {
+    display: none; 
+  }
+}
+
+

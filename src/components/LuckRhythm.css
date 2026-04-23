@@ -1,0 +1,324 @@
+.luck-rhythm-container {
+  padding: 3rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  background: white;
+  border-radius: 30px;
+  box-shadow: var(--shadow-card);
+}
+
+.sub-tab-nav {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.sub-tab-nav button {
+  padding: 0.6rem 1.5rem;
+  border-radius: 99px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #64748b;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sub-tab-nav button.active {
+  background: #1e3a8a;
+  color: white;
+  border-color: #1e3a8a;
+  font-size: 1.05rem;
+  font-weight: 800;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+}
+
+.year-selector-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  width: fit-content;
+}
+
+.year-input {
+  width: 100px;
+  padding: 0.5rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  text-align: center;
+}
+
+.year-sum-badge {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #64748b;
+  background: #e2e8f0;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+}
+
+/* Wave Canvas */
+.wave-canvas-wrapper {
+  margin: 4rem 0;
+  padding: 2rem;
+  background: linear-gradient(to bottom, #fff, #f9fafb);
+  border-radius: 20px;
+  border: 1px solid #f1f5f9;
+}
+
+.wave-svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.point-circle {
+  fill: #fff;
+  stroke: #cbd5e1;
+  stroke-width: 2px;
+}
+
+.point-circle.white {
+  fill: #fff;
+  stroke: #94a3b8;
+  stroke-width: 2px;
+}
+
+.point-circle.black {
+  fill: #475569;
+  stroke: #1e293b;
+  stroke-width: 1px;
+}
+
+.double-circle-group .outer {
+  fill: #fff;
+  stroke: #475569;
+  stroke-width: 2px;
+}
+
+.double-circle-group .inner {
+  fill: #475569;
+}
+
+.arrow-label {
+  font-size: 0.9rem;
+  font-weight: 800;
+  fill: #94a3b8;
+  letter-spacing: 0.1em;
+}
+
+.x-label {
+  font-size: 1rem;
+  font-weight: 700;
+  fill: #64748b;
+}
+
+.member-avatar-tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transform: translateY(-5px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.instruction-box {
+  background: #f8fafc;
+  padding: 2rem;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+.important-note {
+  font-weight: 800;
+  color: #ef4444;
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.theory-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 2.5rem;
+}
+
+.theory-item h4 {
+  color: var(--accent-primary);
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.4rem;
+}
+
+.theory-item p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #475569;
+}
+
+/* Timeline View */
+.timeline-table-wrapper {
+  max-height: 500px;
+  overflow-y: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.timeline-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.timeline-table th {
+  position: sticky;
+  top: 0;
+  background: #f8fafc;
+  padding: 1rem;
+  text-align: left;
+  font-size: 0.9rem;
+  color: #64748b;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.timeline-table td {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.95rem;
+}
+
+.year-col { color: #64748b; }
+.age-col { font-weight: 700; color: #1e293b; }
+.zone-col .zone-badge {
+  background: var(--accent-primary);
+  color: white;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-weight: 800;
+}
+
+.timeline-table tr.down .status-col { color: #ef4444; font-weight: 700; }
+.timeline-table tr.up .status-col { color: #10b981; font-weight: 700; }
+
+.mini-wave-indicator {
+  width: 100%;
+  height: 20px;
+  background: #f1f5f9;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.mini-wave-indicator .bar {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: var(--accent-primary);
+  opacity: 0.3;
+}
+
+/* PRINT MEDIA: A4 Landscape */
+@media print {
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  html, body, #root, .app-container, .main-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .print-hide, .app-sidebar, .header {
+    display: none !important;
+  }
+
+  .luck-rhythm-container {
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: white !important;
+    margin: 0 auto;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  .diagram-header { 
+    margin-top: 5mm; 
+    margin-bottom: 2mm;
+  }
+
+  .wave-canvas-wrapper {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: none !important;
+    width: 100%;
+    transform: scale(0.8);
+    transform-origin: top center;
+    margin-bottom: -120px !important; /* 空白を大きく削って上に詰める */
+  }
+
+  /* タイムラインビュー（自分年表）の全体をさらに縮小して4段すべてを確実にA4横(188mm)に収める */
+  .timeline-view {
+    width: 100%;
+    transform: scale(0.58);
+    transform-origin: top center;
+    margin-bottom: -350px;
+  }
+
+  .waterfall-timeline-container {
+    overflow: visible !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .instruction-box {
+    page-break-inside: avoid;
+    padding: 0 !important;
+    margin-top: 0 !important;
+    transform: scale(0.85);
+    transform-origin: top center;
+  }
+
+  .theory-grid {
+    gap: 0.5rem !important;
+  }
+
+  .theory-item h4 {
+    margin-bottom: 0.2rem !important;
+    padding-bottom: 0.1rem !important;
+    font-size: 0.95rem !important;
+  }
+
+  .theory-item p {
+    font-size: 0.8rem !important;
+    line-height: 1.3 !important;
+    margin-bottom: 0 !important;
+  }
+}
+
+

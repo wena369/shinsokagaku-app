@@ -1,0 +1,313 @@
+.circulation-diagram-container {
+  padding: 4rem;
+  border-radius: 40px;
+  background: white;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--glass-border);
+}
+
+.diagram-header {
+  text-align: center;
+  width: 100%;
+}
+
+.diagram-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.2rem;
+  background: linear-gradient(to right, #1e293b, #3b82f6);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.diagram-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.circulation-canvas-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.circulation-canvas {
+  position: relative;
+  width: 900px;
+  height: 900px;
+  margin: 0 auto;
+  flex-shrink: 0;
+}
+
+.circulation-arrows-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.circulation-zone {
+  position: absolute;
+  z-index: 2;
+  width: 100px;
+  height: 100px;
+  transform: translate(-50%, -50%); /* Center the exact circle point */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.zone-circle {
+  width: 100px;
+  height: 100px;
+  border: 4px solid var(--accent-primary);
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.15);
+  position: relative;
+  transition: all 0.3s ease;
+  z-index: 3;
+}
+
+.pos-center .zone-circle {
+  border-color: #ef4444; /* Red for center 9 */
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+}
+
+.zone-circle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 15px 30px rgba(37, 99, 235, 0.25);
+}
+
+.split-labels {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.label-top, .label-bottom {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--accent-primary);
+  line-height: 1;
+}
+
+.label-top { margin-bottom: 2px; }
+.label-bottom { margin-top: 2px; }
+
+.center-label {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #ef4444; 
+}
+
+.divider-h {
+  width: 80%;
+  height: 2px;
+  background: #cbd5e1;
+}
+
+/* OUTWARD SPROUTING MEMBER LISTS */
+.zone-member-list {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 4;
+}
+
+/* West (6,3): Members Left */
+.pos-west .zone-member-list {
+  right: 100%;
+  margin-right: 20px;
+  align-items: flex-end;
+}
+
+/* East (7,2): Members Right */
+.pos-east .zone-member-list {
+  left: 100%;
+  margin-left: 20px;
+  align-items: flex-start;
+}
+
+/* Center (9): Members Right */
+.pos-center .zone-member-list {
+  left: 100%;
+  margin-left: 20px;
+  align-items: flex-start;
+}
+
+/* North (8,1): Members Top */
+.pos-north .zone-member-list {
+  bottom: 100%;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+/* South (5,4): Members Bottom */
+.pos-south .zone-member-list {
+  top: 100%;
+  margin-top: 20px;
+  align-items: center;
+}
+
+.member-item-tag {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0.5rem 1rem;
+  border-radius: 99px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: fit-content;
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.m-name { color: #1e293b; }
+.m-label { color: #64748b; font-size: 0.75rem; font-weight: 600; }
+
+.no-members { color: #cbd5e1; font-weight: 400; font-size: 1.2rem; }
+
+/* Legend & Description */
+.circulation-legend {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1000px;
+  margin-top: 2rem;
+}
+
+.legend-card {
+  background: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+.legend-card h4 {
+  font-size: 1.2rem;
+  color: var(--accent-primary);
+  margin-bottom: 1rem;
+}
+
+.legend-card p {
+  font-size: 0.95rem;
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.legend-card ul {
+  padding-left: 1.2rem;
+  margin: 0;
+}
+
+.legend-card li {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.diagram-footer {
+  text-align: right;
+  width: 100%;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .circulation-legend { grid-template-columns: 1fr; }
+}
+
+/* PRINT MEDIA: A4 Portrait */
+@media print {
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  html, body, #root, .app-container, .main-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  .print-hide, .app-sidebar, .header {
+    display: none !important;
+  }
+
+  .diagram-title {
+    background: none !important;
+    -webkit-text-fill-color: #1e293b !important;
+    color: #1e293b !important;
+  }
+
+  .circulation-diagram-container {
+    padding: 0;
+    box-shadow: none;
+    border: none;
+    background: white;
+    margin: 0 auto;
+    page-break-after: avoid !important;
+    page-break-inside: avoid;
+    gap: 0.5rem;
+  }
+
+  .diagram-header { margin-top: 5mm; }
+
+  /* Scale down to ensure vertical height fits easily in A4 portrait without clipping the memo */
+  .circulation-canvas-wrapper {
+    width: 100%;
+    overflow: visible !important; 
+    transform: scale(0.55);
+    transform-origin: top center;
+    margin-bottom: -405px; /* Offset the 900px * 0.45 space leftover */
+  }
+
+  /* Keep legend cards side-by-side to drastically reduce vertical height */
+  .circulation-legend {
+    width: 100%;
+    max-width: 100%;
+    transform: scale(0.9);
+    transform-origin: top center;
+    margin-top: 0;
+    grid-template-columns: 1.5fr 1fr; /* Side-by-side saves vertical space! */
+    gap: 1.5rem;
+    page-break-inside: avoid;
+  }
+}

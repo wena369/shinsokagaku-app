@@ -1,0 +1,111 @@
+.dna-model-wrapper {
+  padding: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  pointer-events: none;
+  background: radial-gradient(circle at center, rgba(37, 99, 235, 0.05) 0%, transparent 70%);
+}
+
+.dna-perspective {
+  perspective: 1200px;
+  height: 280px;
+  width: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dna-container-3d {
+  position: relative;
+  transform-style: preserve-3d;
+  animation: dna-rotate 25s linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes dna-rotate {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(360deg); }
+}
+
+.dna-ring {
+  position: absolute;
+  border: 1px solid rgba(148, 163, 184, 0.15); /* Faint ring */
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.dna-dot-node {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  left: 50%;
+  top: 50%;
+  margin-top: -4px;
+  margin-left: -4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+.dot-label {
+  position: absolute;
+  color: #64748b;
+  font-size: 6px;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  text-shadow: 0 0 2px white;
+  left: 12px;
+}
+
+.dna-point-cap {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #fbbf24;
+  border-radius: 50%;
+  box-shadow: 0 0 15px #fbbf24;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.cap-label {
+  position: absolute;
+  font-size: 8px;
+  font-weight: 800;
+  color: #1a202c;
+  top: -14px;
+  background: white;
+  padding: 1px 4px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.dna-caption {
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Add a slow vertical float */
+@keyframes dna-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.dna-perspective {
+  animation: dna-float 6s ease-in-out infinite;
+}
