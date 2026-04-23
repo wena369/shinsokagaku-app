@@ -282,7 +282,7 @@
 @media screen and (max-width: 900px) {
   .gt-tree { min-width: 1125px; }
   .print-content-wrapper {
-    zoom: 0.6; /* Increased zoom to make text readable */
+    zoom: 0.72; /* User requested about 20% larger than 0.6 */
   }
   .genealogy-tree-container {
     overflow-x: auto; /* allow horizontal scrolling */
@@ -351,9 +351,9 @@
     position: absolute !important;
     top: 550px !important; /* Move it below the tree center rows */
     left: 20px !important;
-    width: 280px !important; /* Confine to left edge */
+    width: 170px !important; /* User requested 60% of current width */
     height: auto !important;
-    max-height: 240px !important;
+    max-height: 180px !important;
     column-count: 1 !important; /* Single column */
     text-align: left;
     zoom: 0.85; 

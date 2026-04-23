@@ -108,22 +108,24 @@ const TimelineRow = ({ startIndex, endIndex, member, getTextColor }: any) => {
             
             {/* Tag when lucky! */}
             {n.isMatch && (
-              <foreignObject x={n.cx - 40} y={n.cy - 60} width="80" height="40" style={{ overflow: 'visible' }}>
+              <foreignObject x={n.cx - 40} y={n.cy - 60} width="80" height="40">
                 <div style={{
                   backgroundColor: member.luckColor || '#10b981',
                   color: getTextColor(member.luckColor),
-                  fontSize: '11px',
+                  fontSize: '10px',
                   fontWeight: 'bold',
-                  borderRadius: '8px',
+                  borderRadius: '6px',
                   textAlign: 'center',
-                  lineHeight: '1.4',
+                  lineHeight: '1.2',
                   boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
                   border: '1px solid rgba(0,0,0,0.1)',
-                  position: 'absolute',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  padding: '4px 8px',
-                  whiteSpace: 'nowrap'
+                  padding: '2px 4px',
+                  width: '100%',
+                  height: '100%',
+                  boxSizing: 'border-box',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
                 }}>
                   {member.name || "運気数"}<br/>幸福大転換
                 </div>
