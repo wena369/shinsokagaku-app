@@ -8,6 +8,36 @@ interface Props {
   onChange: (data: FamilyData) => void;
 }
 
+const DateInputWithPicker = ({ value, onChange, className }: { value: string, onChange: (v: string) => void, className?: string }) => {
+  return (
+    <div style={{ position: 'relative', display: 'flex', alignItems: 'center', width: '100%' }}>
+      <input
+        type="text"
+        inputMode="numeric"
+        placeholder="例: 1980-01-01"
+        className={className}
+        style={{ paddingRight: '2rem', width: '100%' }}
+        value={value}
+        onChange={(e) => {
+          const val = e.target.value.replace(/[^0-9-]/g, '');
+          onChange(val);
+        }}
+      />
+      <div style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '24px', height: '24px', overflow: 'hidden' }}>
+        <input 
+          type="date" 
+          style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', width: '100%', height: '100%', transform: 'scale(2)' }}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
+        <svg style={{ width: '20px', height: '20px', color: '#9ca3af', pointerEvents: 'none' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </div>
+    </div>
+  );
+};
+
 const FamilyForm: React.FC<Props> = ({ data, onChange }) => {
   const [activeSection, setActiveSection] = useState<string | null>('self');
 
@@ -74,11 +104,9 @@ const FamilyForm: React.FC<Props> = ({ data, onChange }) => {
               )}
               <div className="input-row">
                 <label>生年月日</label>
-                <input 
-                  type="date" 
-                  max="9999-12-31"
+                <DateInputWithPicker 
                   value={member.birthDate} 
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => updateMember(path, 'birthDate', e.target.value)}
+                  onChange={(val) => updateMember(path, 'birthDate', val)}
                 />
               </div>
               <div className="input-row">
@@ -126,12 +154,10 @@ const FamilyForm: React.FC<Props> = ({ data, onChange }) => {
                     placeholder="お名前"
                   />
                   <div className="secondary-inputs">
-                    <input 
-                      type="date" 
+                    <DateInputWithPicker 
                       className="date-input"
-                      max="9999-12-31"
                       value={member.birthDate} 
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => updateMember(`${path}.${i}`, 'birthDate', e.target.value)}
+                      onChange={(val) => updateMember(`${path}.${i}`, 'birthDate', val)}
                     />
                     <input 
                       type="text" 
