@@ -21,6 +21,45 @@ interface CompatibilityCheckProps {
   isBatchPrinting?: boolean;
 }
 
+const DateInputWithPicker = ({ value, onChange, className, style }: { value: string, onChange: (v: string) => void, className?: string, style?: React.CSSProperties }) => {
+  return (
+    <div style={{ position: 'relative', display: 'flex', alignItems: 'center', width: '100%', ...style }}>
+      <input
+        type="text"
+        inputMode="numeric"
+        placeholder="例: 1980-01-01"
+        className={className}
+        style={{ paddingRight: '2rem', width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '4px' }}
+        value={value}
+        onChange={(e) => {
+          let val = e.target.value.replace(/[^0-9]/g, '');
+          if (val.length > 8) val = val.slice(0, 8);
+          
+          let formatted = val;
+          if (val.length >= 5) {
+            formatted = val.slice(0, 4) + '-' + val.slice(4);
+          }
+          if (val.length >= 7) {
+            formatted = val.slice(0, 4) + '-' + val.slice(4, 6) + '-' + val.slice(6);
+          }
+          onChange(formatted);
+        }}
+      />
+      <div style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '24px', height: '24px', overflow: 'hidden' }}>
+        <input 
+          type="date" 
+          style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', width: '100%', height: '100%', transform: 'scale(2)' }}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
+        <svg style={{ width: '20px', height: '20px', color: '#9ca3af', pointerEvents: 'none' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </div>
+    </div>
+  );
+};
+
 export default function CompatibilityCheck({ selfData, onSelfChange, partnerData, onPartnerChange, memo = "", onMemoChange, isBatchPrinting = false }: CompatibilityCheckProps) {
   // 相手のローカル状態（親から渡されなかった場合のフォールバック）
   const [internalPartner, setInternalPartner] = useState<PersonInput>({
@@ -119,7 +158,7 @@ export default function CompatibilityCheck({ selfData, onSelfChange, partnerData
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '5px', color: '#4b5563' }}>生年月日</label>
-              <input type="date" value={selfData.birthDate} onChange={e => handleSelfChange('birthDate', e.target.value)} style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '4px' }} />
+              <DateInputWithPicker value={selfData.birthDate} onChange={val => handleSelfChange('birthDate', val)} />
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '5px', color: '#4b5563' }}>心相数（基本は未入力で自動計算）</label>
@@ -151,7 +190,7 @@ export default function CompatibilityCheck({ selfData, onSelfChange, partnerData
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '5px', color: '#4b5563' }}>生年月日</label>
-              <input type="date" value={partner.birthDate} onChange={e => handlePartnerChange('birthDate', e.target.value)} min="1900-01-01" max="2100-12-31" style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '4px' }} />
+              <DateInputWithPicker value={partner.birthDate} onChange={val => handlePartnerChange('birthDate', val)} />
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '5px', color: '#4b5563' }}>心相数（基本は未入力で自動計算）</label>

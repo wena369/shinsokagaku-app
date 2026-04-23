@@ -245,9 +245,15 @@
 
 @media (max-width: 768px) {
   .circulation-legend { grid-template-columns: 1fr; }
+  .circulation-canvas-wrapper {
+    transform: scale(0.4);
+    transform-origin: top center;
+    margin-bottom: -540px; /* Offset the 900px * 0.6 space leftover */
+    overflow: visible;
+  }
 }
 
-/* PRINT MEDIA: A4 Portrait */
+/* PRINT MEDIA: A4 Landscape */
 @media print {
 
   * {
@@ -275,6 +281,13 @@
     background: none !important;
     -webkit-text-fill-color: #1e293b !important;
     color: #1e293b !important;
+    font-size: 1.5rem;
+    margin-bottom: 0;
+  }
+  
+  .diagram-subtitle {
+    font-size: 0.8rem;
+    margin-top: 0;
   }
 
   .circulation-diagram-container {
@@ -285,29 +298,29 @@
     margin: 0 auto;
     page-break-after: avoid !important;
     page-break-inside: avoid;
-    gap: 0.5rem;
+    gap: 0;
   }
 
-  .diagram-header { margin-top: 5mm; }
+  .diagram-header { margin-top: 0; margin-bottom: 0; }
 
-  /* Scale down to ensure vertical height fits easily in A4 portrait without clipping the memo */
+  /* Scale down to ensure height fits easily in A4 landscape without clipping the memo */
   .circulation-canvas-wrapper {
     width: 100%;
     overflow: visible !important; 
-    transform: scale(0.55);
+    transform: scale(0.45);
     transform-origin: top center;
-    margin-bottom: -405px; /* Offset the 900px * 0.45 space leftover */
+    margin-bottom: -495px; /* Offset the 900px * 0.55 space leftover */
   }
 
   /* Keep legend cards side-by-side to drastically reduce vertical height */
   .circulation-legend {
     width: 100%;
     max-width: 100%;
-    transform: scale(0.9);
+    transform: scale(0.85);
     transform-origin: top center;
     margin-top: 0;
     grid-template-columns: 1.5fr 1fr; /* Side-by-side saves vertical space! */
-    gap: 1.5rem;
+    gap: 1rem;
     page-break-inside: avoid;
   }
 }

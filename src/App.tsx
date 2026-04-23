@@ -120,8 +120,16 @@ function App() {
     );
   }
 
+  const getPrintStyle = () => {
+    if (activeTab === 'tree' || activeTab === 'circulation' || activeTab === 'luck') {
+      return `@page { size: A4 landscape !important; margin: 10mm; }`;
+    }
+    return `@page { size: A4 portrait !important; margin: 10mm; }`;
+  };
+
   return (
     <div className="app-container">
+      <style media="print" dangerouslySetInnerHTML={{ __html: getPrintStyle() }} />
       <aside className="sidebar print-hide">
         <div className="logo">
           Mental Life<br/>Producer

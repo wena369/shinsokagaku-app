@@ -22,6 +22,10 @@ const AppraisalMemo: React.FC<AppraisalMemoProps> = ({ memo, onMemoChange, onReg
     }
   }, []);
 
+  const MAX_CHARS = 400;
+  const charCount = memo.length;
+  const isOverLimit = charCount > MAX_CHARS;
+
   return (
     <div className="appraisal-memo-container" style={{ marginTop: '30px', pageBreakInside: 'avoid' }}>
       {/* 画面上のUI */}
@@ -29,6 +33,9 @@ const AppraisalMemo: React.FC<AppraisalMemoProps> = ({ memo, onMemoChange, onReg
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
           <h4 style={{ margin: 0, color: '#374151', display: 'flex', alignItems: 'center', gap: '6px' }}>
             ✏️ 鑑定メモ・自由記入欄
+            <span style={{ fontSize: '0.8rem', color: isOverLimit ? '#ef4444' : '#6b7280', fontWeight: 'normal', marginLeft: '10px' }}>
+              ({charCount} / 約{MAX_CHARS}文字目安)
+            </span>
           </h4>
           <button 
             onClick={onRegenerate}
@@ -38,6 +45,11 @@ const AppraisalMemo: React.FC<AppraisalMemoProps> = ({ memo, onMemoChange, onReg
             ↻ デフォルト解説を再生成
           </button>
         </div>
+        {isOverLimit && (
+          <div style={{ color: '#ef4444', fontSize: '0.8rem', marginBottom: '8px', fontWeight: 'bold' }}>
+            ※文字数が多すぎます。印刷時に2枚目にはみ出す可能性があります。
+          </div>
+        )}
         <textarea
           value={memo}
           onChange={(e) => onMemoChange(e.target.value)}
@@ -48,14 +60,15 @@ const AppraisalMemo: React.FC<AppraisalMemoProps> = ({ memo, onMemoChange, onReg
           style={{
             width: '100%',
             padding: '10px',
-            border: isEditing ? '2px solid #3b82f6' : '1px solid #d1d5db',
+            border: isEditing ? '2px solid #3b82f6' : (isOverLimit ? '2px solid #ef4444' : '1px solid #d1d5db'),
             borderRadius: '4px',
             resize: 'vertical',
             fontFamily: 'inherit',
             fontSize: '0.95rem',
             lineHeight: '1.5',
             outline: 'none',
-            boxSizing: 'border-box'
+            boxSizing: 'border-box',
+            color: isOverLimit ? '#b91c1c' : 'inherit'
           }}
         />
         <p style={{ fontSize: '0.8rem', color: '#9ca3af', margin: '5px 0 0 0', textAlign: 'right' }}>

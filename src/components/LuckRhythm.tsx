@@ -218,18 +218,20 @@ const LuckRhythm: React.FC<Props> = ({ data, memo = "", onMemoChange, isBatchPri
           }
         `}</style>
       )}
-      <div className="diagram-header" style={{ position: 'relative' }}>
-        <h2 className="diagram-title">運気リズム (9年サイクル)</h2>
-        <div className="sub-tab-nav">
-          <button className={currentTab === 'cycle' ? 'active tab-btn' : 'tab-btn'} onClick={() => setActiveSubTab('cycle')}>9年サイクル図</button>
-          <button className={currentTab === 'timeline' ? 'active tab-btn' : 'tab-btn'} onClick={() => setActiveSubTab('timeline')}>自分年表</button>
+      <div className="diagram-header" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: '10px' }}>
+        <div>
+          <h2 className="diagram-title">運気リズム (9年サイクル)</h2>
+          <div className="sub-tab-nav">
+            <button className={currentTab === 'cycle' ? 'active tab-btn' : 'tab-btn'} onClick={() => setActiveSubTab('cycle')}>9年サイクル図</button>
+            <button className={currentTab === 'timeline' ? 'active tab-btn' : 'tab-btn'} onClick={() => setActiveSubTab('timeline')}>自分年表</button>
+          </div>
         </div>
         
         {/* A4横型印刷ボタン */}
-        <div className="print-hide" style={{ position: 'absolute', top: 0, right: 0 }}>
+        <div className="print-hide">
           <button 
             onClick={() => window.print()} 
-            style={{ padding: '0.6rem 1.2rem', background: '#059669', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
+            style={{ padding: '0.6rem 1.2rem', background: '#059669', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', whiteSpace: 'nowrap' }}
           >
             A4横で印刷・PDF出力
           </button>
@@ -251,7 +253,7 @@ const LuckRhythm: React.FC<Props> = ({ data, memo = "", onMemoChange, isBatchPri
           <p className="important-note" style={{ color: '#e11d48', fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '0.5rem', textAlign: 'center' }}>※誕生日を境に当該位置に移動します。</p>
 
           <div className="wave-canvas-wrapper" id="luck-cycle-chart">
-            <svg viewBox="0 0 1000 320" className="wave-svg">
+            <svg viewBox="0 0 1000 320" className="wave-svg" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <marker id="arrowhead-down" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
                   <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
@@ -316,7 +318,7 @@ const LuckRhythm: React.FC<Props> = ({ data, memo = "", onMemoChange, isBatchPri
                 
                 return (
                   <g key={idx} className="member-marker">
-                    <foreignObject x={p.x - 50} y={yOffset} width="100" height="30">
+                    <foreignObject x={p.x - 50} y={yOffset} width="100" height="30" overflow="visible">
                       <div className="member-avatar-tag" style={{ backgroundColor: m.luckColor || (idx % 2 === 0 ? '#3b82f6' : '#10b981'), color: getTextColor(m.luckColor) }}>
                         {m.name || m.label}
                       </div>

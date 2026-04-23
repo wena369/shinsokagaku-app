@@ -67,15 +67,17 @@ const CirculationDiagram: React.FC<CirculationDiagramProps> = ({ data, memo = ""
           }
         `}</style>
       )}
-      <div className="diagram-header" style={{ position: 'relative' }}>
-        <h2 className="diagram-title">循環図 (川上川下図)</h2>
-        <p className="diagram-subtitle">循環数による相性・役割マップ</p>
-        <div className="print-hide" style={{ position: 'absolute', top: 0, right: 0 }}>
+      <div className="diagram-header" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: '10px' }}>
+        <div>
+          <h2 className="diagram-title">循環図 (川上川下図)</h2>
+          <p className="diagram-subtitle">循環数による相性・役割マップ</p>
+        </div>
+        <div className="print-hide">
           <button 
             onClick={() => window.print()} 
-            style={{ padding: '0.6rem 1.2rem', background: '#059669', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
+            style={{ padding: '0.6rem 1.2rem', background: '#059669', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', whiteSpace: 'nowrap' }}
           >
-            A4縦で印刷・PDF出力
+            A4横で印刷・PDF出力
           </button>
         </div>
       </div>
