@@ -379,6 +379,8 @@
     width: 100% !important;
     max-width: none !important;
     height: auto !important;
+    max-height: 275mm !important; /* Force to fit A4 */
+    overflow: hidden !important; /* Cut off anything that exceeds 1 page */
     box-sizing: border-box;
     box-shadow: none !important;
     border: none !important;
@@ -387,7 +389,7 @@
     page-break-after: always;
     page-break-inside: avoid;
     display: block; /* Removed flex, let content flow naturally to prevent weird flex height calculations in print */
-    zoom: 0.95; /* Prevent iOS Safari from spilling to 2 pages */
+    zoom: 0.82; /* Prevent iOS Safari from spilling to 2 pages */
   }
   
   .shinso-karte:last-of-type {

@@ -282,7 +282,11 @@
 @media screen and (max-width: 900px) {
   .gt-tree { min-width: 1125px; }
   .print-content-wrapper {
-    zoom: 0.33; /* Make it fit entirely on initial mobile view */
+    zoom: 0.6; /* Increased zoom to make text readable */
+  }
+  .genealogy-tree-container {
+    overflow-x: auto; /* allow horizontal scrolling */
+    -webkit-overflow-scrolling: touch;
   }
 }
 
@@ -345,21 +349,31 @@
 
   .genealogy-print-memo {
     position: absolute !important;
-    top: 480px !important; /* 自分や配偶者の少し上から開始 */
+    top: 550px !important; /* Move it below the tree center rows */
     left: 20px !important;
-    width: calc(100% - 40px) !important;
-    height: 380px !important; /* 用紙の下までしっかり確保 */
-    max-height: none !important;
-    column-count: 2;
-    /* 真ん中のツリー部分を大きく避け、テキストを左右に押しやる */
-    column-gap: calc(100% - 320px); /* 左右の列幅を160pxずつ（合計320px）に制限し、中央のツリーに被らないようにする */
+    width: 280px !important; /* Confine to left edge */
+    height: auto !important;
+    max-height: 240px !important;
+    column-count: 1 !important; /* Single column */
     text-align: left;
-    zoom: 0.8; /* Shrink memo slightly to prevent overflow */
+    zoom: 0.85; 
+    white-space: pre-wrap !important;
+    word-break: break-all !important;
+    overflow-wrap: break-word !important;
+    overflow: hidden !important;
   }
 
   .genealogy-print-memo h4 {
     display: none; 
   }
+
+  .genealogy-tree-container {
+    overflow: hidden !important; /* Stop mysterious blank 2nd page */
+    max-height: 195mm !important; /* Bound to A4 landscape height approx */
+    page-break-after: avoid;
+    page-break-inside: avoid;
+    box-shadow: none !important;
+    border: none !important;
+    background: white !important;
+  }
 }
-
-

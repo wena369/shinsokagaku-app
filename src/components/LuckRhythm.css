@@ -277,6 +277,8 @@
     margin: 0 auto;
     page-break-after: avoid;
     page-break-inside: avoid;
+    overflow: hidden !important; /* Stop mysterious blank 2nd page */
+    max-height: 285mm !important; /* Cap to A4 portrait height limit */
   }
 
   .diagram-header { 
@@ -290,18 +292,14 @@
     border: none !important;
     background: none !important;
     width: 100%;
-    transform: scale(0.8);
-    transform-origin: top center;
-    margin-bottom: -120px !important; /* 空白を大きく削って上に詰める */
+    zoom: 0.8;
     overflow: visible !important;
   }
 
   /* タイムラインビュー（自分年表）の全体をさらに縮小して4段すべてを確実にA4横(188mm)に収める */
   .timeline-view {
     width: 100%;
-    transform: scale(0.58);
-    transform-origin: top center;
-    margin-bottom: -350px;
+    zoom: 0.58;
   }
 
   .waterfall-timeline-container {
@@ -314,8 +312,7 @@
     page-break-inside: avoid;
     padding: 0 !important;
     margin-top: 0 !important;
-    transform: scale(0.85);
-    transform-origin: top center;
+    zoom: 0.85;
   }
 
   .theory-grid {
