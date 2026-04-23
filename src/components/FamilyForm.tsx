@@ -19,8 +19,17 @@ const DateInputWithPicker = ({ value, onChange, className }: { value: string, on
         style={{ paddingRight: '2rem', width: '100%' }}
         value={value}
         onChange={(e) => {
-          const val = e.target.value.replace(/[^0-9-]/g, '');
-          onChange(val);
+          let val = e.target.value.replace(/[^0-9]/g, '');
+          if (val.length > 8) val = val.slice(0, 8);
+          
+          let formatted = val;
+          if (val.length >= 5) {
+            formatted = val.slice(0, 4) + '-' + val.slice(4);
+          }
+          if (val.length >= 7) {
+            formatted = val.slice(0, 4) + '-' + val.slice(4, 6) + '-' + val.slice(6);
+          }
+          onChange(formatted);
         }}
       />
       <div style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '24px', height: '24px', overflow: 'hidden' }}>
