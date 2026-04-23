@@ -201,7 +201,7 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
       if (wrapper && outer) {
         const treeWidth = wrapper.scrollWidth;
         const treeHeight = wrapper.scrollHeight;
-        const landscapeWidth = 1122; // A4 landscape maximum width
+        const landscapeWidth = 980; // A4 landscape safer maximum width
         
         // ツリー幅が縦幅を超える場合は縮小（余白をゼロにし、用紙ギリギリまで拡大）
         let scale = 1;

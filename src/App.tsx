@@ -121,10 +121,7 @@ function App() {
   }
 
   const getPrintStyle = () => {
-    if (activeTab === 'tree' || activeTab === 'circulation' || activeTab === 'luck') {
-      return `@page { size: A4 landscape !important; margin: 10mm; }`;
-    }
-    return `@page { size: A4 portrait !important; margin: 10mm; }`;
+    return `@page { margin: 10mm; }`;
   };
 
   return (

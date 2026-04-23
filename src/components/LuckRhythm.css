@@ -74,12 +74,25 @@
   background: linear-gradient(to bottom, #fff, #f9fafb);
   border-radius: 20px;
   border: 1px solid #f1f5f9;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.timeline-svg-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 1rem;
 }
 
 .wave-svg {
   width: 100%;
   height: auto;
   overflow: visible;
+  min-width: 800px; /* Prevent text squishing on mobile */
+}
+
+.timeline-svg {
+  min-width: 1100px; /* Prevent text squishing on mobile */
 }
 
 .point-circle {
@@ -271,7 +284,7 @@
     margin-bottom: 2mm;
   }
 
-  .wave-canvas-wrapper {
+  .wave-canvas-wrapper, .timeline-svg-wrapper {
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
@@ -280,6 +293,7 @@
     transform: scale(0.8);
     transform-origin: top center;
     margin-bottom: -120px !important; /* 空白を大きく削って上に詰める */
+    overflow: visible !important;
   }
 
   /* タイムラインビュー（自分年表）の全体をさらに縮小して4段すべてを確実にA4横(188mm)に収める */

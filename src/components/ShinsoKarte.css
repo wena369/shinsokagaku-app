@@ -387,6 +387,7 @@
     page-break-after: always;
     page-break-inside: avoid;
     display: block; /* Removed flex, let content flow naturally to prevent weird flex height calculations in print */
+    zoom: 0.95; /* Prevent iOS Safari from spilling to 2 pages */
   }
   
   .shinso-karte:last-of-type {

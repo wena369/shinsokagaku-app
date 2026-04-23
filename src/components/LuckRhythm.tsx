@@ -63,9 +63,10 @@ const TimelineRow = ({ startIndex, endIndex, member, getTextColor }: any) => {
 
   return (
     <div style={{ marginBottom: '1.5rem', borderBottom: '1px dashed #cbd5e1', paddingBottom: '1rem' }}>
-      <svg viewBox={`0 0 ${svgWidth} 220`} style={{ width: '100%', height: 'auto', overflow: 'visible' }}>
-        {/* Horizontal boundary guides */}
-        <line x1={paddingX} y1="60" x2={svgWidth - paddingX} y2="60" stroke="#f1f5f9" strokeWidth="1" />
+      <div className="timeline-svg-wrapper">
+        <svg viewBox={`0 0 ${svgWidth} 220`} style={{ width: '100%', height: 'auto', overflow: 'visible' }} className="timeline-svg">
+          {/* Horizontal boundary guides */}
+          <line x1={paddingX} y1="60" x2={svgWidth - paddingX} y2="60" stroke="#f1f5f9" strokeWidth="1" />
         <line x1={paddingX} y1="150" x2={svgWidth - paddingX} y2="150" stroke="#f1f5f9" strokeWidth="1" />
         
         {/* Zig-zag Path */}
@@ -130,7 +131,8 @@ const TimelineRow = ({ startIndex, endIndex, member, getTextColor }: any) => {
             )}
           </g>
         ))}
-      </svg>
+        </svg>
+      </div>
     </div>
   );
 };
@@ -214,7 +216,7 @@ const LuckRhythm: React.FC<Props> = ({ data, memo = "", onMemoChange, isBatchPri
       {!isBatchPrinting && (
         <style>{`
           @media print {
-            @page { size: A4 landscape; margin: 10mm; }
+            @page { margin: 10mm; }
           }
         `}</style>
       )}

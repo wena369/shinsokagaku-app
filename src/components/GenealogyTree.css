@@ -281,6 +281,9 @@
 /* Responsive */
 @media screen and (max-width: 900px) {
   .gt-tree { min-width: 1125px; }
+  .print-content-wrapper {
+    zoom: 0.33; /* Make it fit entirely on initial mobile view */
+  }
 }
 
 /* Print Copyright - Hidden normally */
@@ -351,6 +354,7 @@
     /* 真ん中のツリー部分を大きく避け、テキストを左右に押しやる */
     column-gap: calc(100% - 320px); /* 左右の列幅を160pxずつ（合計320px）に制限し、中央のツリーに被らないようにする */
     text-align: left;
+    zoom: 0.8; /* Shrink memo slightly to prevent overflow */
   }
 
   .genealogy-print-memo h4 {
