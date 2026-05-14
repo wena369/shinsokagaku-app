@@ -191,6 +191,17 @@ const FamilyForm: React.FC<Props> = ({ data, onChange }) => {
             {renderInputGroup("義理の母親", "spouseMother", <Users size={18} />, "spouse_mother")}
           </div>
         </div>
+
+        <div className="parents-grid">
+          <div className="parents-col">
+            <h3 className="sub-header">あなたの兄弟姉妹</h3>
+            {renderListGroup("兄弟姉妹", "siblings", 2, <Users size={18} />, "siblings")}
+          </div>
+          <div className="parents-col">
+            <h3 className="sub-header">配偶者の兄弟姉妹</h3>
+            {renderListGroup("義兄弟姉妹", "spouseSiblings", 2, <Users size={18} />, "spouseSiblings")}
+          </div>
+        </div>
         
         <div className="ancestors-group">
           <h3 className="sub-header">あなたの祖父母 (任意)</h3>

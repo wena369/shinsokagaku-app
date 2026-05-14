@@ -327,6 +327,7 @@ export interface FamilyData {
   spouseFather: FamilyMember;
   spouseMother: FamilyMember;
   siblings: FamilyMember[]; // Max 4
+  spouseSiblings: FamilyMember[]; // Max 4
   children: FamilyMember[]; // Max 6
   grandchildren: FamilyMember[]; // Max 6
   interestedPeople: FamilyMember[]; // Max 4
@@ -350,6 +351,7 @@ export const INITIAL_FAMILY_DATA: FamilyData = {
   spouseFather: { ...INITIAL_MEMBER },
   spouseMother: { ...INITIAL_MEMBER },
   siblings: Array(4).fill(null).map(() => ({ ...INITIAL_MEMBER })),
+  spouseSiblings: Array(4).fill(null).map(() => ({ ...INITIAL_MEMBER })),
   children: Array(6).fill(null).map(() => ({ ...INITIAL_MEMBER })),
   grandchildren: Array(6).fill(null).map(() => ({ ...INITIAL_MEMBER })),
   interestedPeople: Array(4).fill(null).map(() => ({ ...INITIAL_MEMBER })),
