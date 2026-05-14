@@ -155,7 +155,16 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
     drawLine('mgm', 'mgf', ['mother']);
     drawLine('spgm', 'spgf', ['spouse-father']);
     drawLine('smgm', 'smgf', ['spouse-mother']);
-    drawLine('mother', 'father', ['self']);
+
+    // 兄弟姉妹のIDを親→子の接続線に含める
+    const siblingIds = data.siblings.filter(s => s.birthDate || s.manualShinso).slice(0, 2).map((_, i) => `sibling-${i}`);
+    const selfAndSiblings = ['self', ...siblingIds];
+    if (isMale) {
+      drawLine('mother', 'father', selfAndSiblings);
+    } else {
+      // 女性の場合、兄弟姉妹は左に来るので順番を調整
+      drawLine('mother', 'father', [...siblingIds, 'self']);
+    }
     drawLine('spouse-mother', 'spouse-father', ['spouse']);
 
     const drawVerticalLine = (p1Id: string, p2Id: string, color = "#333") => {
@@ -425,8 +434,14 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
               {renderNode(leftFather, leftFatherLabel, "", leftFatherId, 'right')}
             </div>
             
-            {/* Self/Spouse */}
-            <div>
+            {/* Self/Spouse + Siblings */}
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px' }}>
+              {/* 女性の場合、左側（配偶者側）に兄弟姉妹を配置 */}
+              {!isMale && data.siblings.filter(s => s.birthDate || s.manualShinso).slice(0, 2).map((s, i) => (
+                <div key={`sib-left-${i}`}>
+                  {renderNode(s, `兄弟姉妹${i + 1}`, '', `sibling-${i}`, 'left')}
+                </div>
+              ))}
               {renderNode(leftPerson, leftPersonLabel, leftPersonClass, leftPersonId, 'left')}
             </div>
 
@@ -461,9 +476,15 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
               {renderNode(rightFather, rightFatherLabel, "", rightFatherId, 'right')}
             </div>
             
-            {/* Self/Spouse */}
-            <div>
+            {/* Self/Spouse + Siblings */}
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px' }}>
               {renderNode(rightPerson, rightPersonLabel, rightPersonClass, rightPersonId, 'right')}
+              {/* 男性の場合、右側（自分側）に兄弟姉妹を配置 */}
+              {isMale && data.siblings.filter(s => s.birthDate || s.manualShinso).slice(0, 2).map((s, i) => (
+                <div key={`sib-right-${i}`}>
+                  {renderNode(s, `兄弟姉妹${i + 1}`, '', `sibling-${i}`, 'right')}
+                </div>
+              ))}
             </div>
 
           </div>
@@ -494,8 +515,14 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
 
       </div>{/* End of print-content-wrapper */}
       
+      {/* 兄弟姉妹の注釈 */}
+      {data.siblings.some(s => s.birthDate || s.manualShinso) && (
+        <p style={{ textAlign: 'center', fontSize: '11px', color: '#999', margin: '4px 0 0' }}>※兄弟姉妹は入力順で記載しています（順不同）</p>
+      )}
+
+      {/* 鑑定メモ — 最下部にフル幅で配置 */}
       {onMemoChange && (
-        <div className="gt-memo-container print-absolute-wrapper">
+        <div className="gt-memo-container" style={{ width: '100%', padding: '0 1rem', boxSizing: 'border-box' }}>
           <AppraisalMemo 
             memo={memo} 
             onMemoChange={onMemoChange} 

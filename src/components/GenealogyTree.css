@@ -335,9 +335,8 @@
     display: inline !important;
   }
 
-  .print-absolute-wrapper {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 0;
+  .gt-memo-container {
+    page-break-inside: avoid;
   }
 
   .print-copyright {
@@ -348,13 +347,9 @@
   }
 
   .genealogy-print-memo {
-    position: absolute !important;
-    top: 550px !important; /* Move it below the tree center rows */
-    left: 20px !important;
-    width: 170px !important; /* User requested 60% of current width */
+    width: 100% !important;
     height: auto !important;
-    max-height: 180px !important;
-    column-count: 1 !important; /* Single column */
+    max-height: 120px !important;
     text-align: left;
     zoom: 0.85; 
     white-space: pre-wrap !important;

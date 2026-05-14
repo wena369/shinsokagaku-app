@@ -1,4 +1,4 @@
-import { type FamilyData, getDetailedShinso, parseDate } from './shinso';
+import { type FamilyData, getDetailedShinso, parseDate, getLuckPositionIndex, LUCK_ZONE_LABELS } from './shinso';
 import { BASIC_TRAITS } from '../data/shinsodata';
 
 // 個人カルテ用
@@ -7,12 +7,37 @@ export function generateKarteMemo(member: any): string {
   const { year, month, day } = parseDate(member.birthDate);
   const details = getDetailedShinso(year, month, day, member.manualShinso);
   const trait = BASIC_TRAITS[Number(details.basicNumber) as keyof typeof BASIC_TRAITS]?.trait || "";
-  
+
+  // グループ数の意味
+  const groupMeaning: Record<number, string> = {
+    1: "組織の長・リーダータイプ",
+    2: "番頭役・調整役タイプ",
+    3: "独立独歩・開拓者タイプ"
+  };
+  const groupDesc = groupMeaning[details.positionGroup] || "";
+
+  // 今年の運気位置
+  const currentYear = new Date().getFullYear();
+  const luckIdx = getLuckPositionIndex(currentYear, details.luckRhythmNumber);
+  const luckZone = LUCK_ZONE_LABELS[luckIdx] || "";
+
+  // 直近の転換期
+  const currentAge = member.birthDate ? (currentYear - year) : 0;
+  const nextTransformation = details.transformationAges.find((a: number) => a >= currentAge);
+
+  // ラッキーカラー
+  const colors = [details.luckColorNameX, details.luckColorNameY, details.luckColorNameZ].filter(Boolean).join('・');
+
+  // 二分の一系列（最初の3つ）
+  const binarySeq = details.binarySequence.slice(0, 3).join(' → ');
+
   return `${member.name || 'この方'}の鑑定メモ：
-心相数「${details.shinso}」は、${trait}といった気質を持ちます。
-基本数（枝）は「${details.basicNumber}」であり、人生におけるテーマがここに現れています。
-また、運命の出会いを引き寄せる受胎数は 自「${details.conceptionSelf}」/ 他「${details.conceptionOther}」です。
-八犬伝グループに該当する方とは深いご縁がありますので、周囲の人間関係と照らし合わせてみてください。
+心相数「${details.shinso}」— ${trait}の気質。グループ${details.positionGroup}（${groupDesc}）。
+基本数（枝）「${details.basicNumber}」、受胎数 自「${details.conceptionSelf}」/ 他「${details.conceptionOther}」。
+運気数${details.luckRhythmNumber} → ${currentYear}年は地点${luckZone}。${nextTransformation ? `次の幸福大転換期は${nextTransformation}歳。` : ''}
+ラッキーカラー：${colors}。循環数：${details.z}。
+二分の一系列：${binarySeq}
+八犬伝に該当する方とは深いご縁があります。周囲の人間関係と照合してみてください。
 `;
 }
 
