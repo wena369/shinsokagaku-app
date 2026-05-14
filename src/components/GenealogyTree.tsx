@@ -446,17 +446,33 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
             {/* Self/Spouse + Siblings */}
             <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px' }}>
               {/* 女性の場合、左側に自分の兄弟姉妹を配置 */}
-              {!isMale && data.siblings.filter(s => s.birthDate || s.manualShinso).slice(0, 2).map((s, i) => (
-                <div key={`sib-left-${i}`}>
-                  {renderNode(s, `兄弟姉妹${i + 1}`, '', `sibling-${i}`, 'left')}
-                </div>
-              ))}
+              {!isMale && (() => {
+                const sibs = data.siblings.filter(s => s.birthDate || s.manualShinso).slice(0, 2);
+                return sibs.length > 0 ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      {sibs.map((s, i) => (
+                        <div key={`sib-left-${i}`}>{renderNode(s, `兄弟姉妹${i + 1}`, '', `sibling-${i}`, 'left')}</div>
+                      ))}
+                    </div>
+                    <span style={{ fontSize: '9px', color: '#aaa', marginTop: '4px' }}>（順不同）</span>
+                  </div>
+                ) : null;
+              })()}
               {/* 男性の場合、左側（配偶者側）に配偶者の兄弟姉妹を配置 */}
-              {isMale && data.spouseSiblings.filter(s => s.birthDate || s.manualShinso).slice(0, 2).map((s, i) => (
-                <div key={`sp-sib-left-${i}`}>
-                  {renderNode(s, `義兄弟姉妹${i + 1}`, '', `spouse-sibling-${i}`, 'left')}
-                </div>
-              ))}
+              {isMale && (() => {
+                const sibs = data.spouseSiblings.filter(s => s.birthDate || s.manualShinso).slice(0, 2);
+                return sibs.length > 0 ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      {sibs.map((s, i) => (
+                        <div key={`sp-sib-left-${i}`}>{renderNode(s, `義兄弟姉妹${i + 1}`, '', `spouse-sibling-${i}`, 'left')}</div>
+                      ))}
+                    </div>
+                    <span style={{ fontSize: '9px', color: '#aaa', marginTop: '4px' }}>（順不同）</span>
+                  </div>
+                ) : null;
+              })()}
               {renderNode(leftPerson, leftPersonLabel, leftPersonClass, leftPersonId, 'left')}
             </div>
 
@@ -495,17 +511,33 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
             <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px' }}>
               {renderNode(rightPerson, rightPersonLabel, rightPersonClass, rightPersonId, 'right')}
               {/* 男性の場合、右側（自分側）に兄弟姉妹を配置 */}
-              {isMale && data.siblings.filter(s => s.birthDate || s.manualShinso).slice(0, 2).map((s, i) => (
-                <div key={`sib-right-${i}`}>
-                  {renderNode(s, `兄弟姉妹${i + 1}`, '', `sibling-${i}`, 'right')}
-                </div>
-              ))}
+              {isMale && (() => {
+                const sibs = data.siblings.filter(s => s.birthDate || s.manualShinso).slice(0, 2);
+                return sibs.length > 0 ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      {sibs.map((s, i) => (
+                        <div key={`sib-right-${i}`}>{renderNode(s, `兄弟姉妹${i + 1}`, '', `sibling-${i}`, 'right')}</div>
+                      ))}
+                    </div>
+                    <span style={{ fontSize: '9px', color: '#aaa', marginTop: '4px' }}>（順不同）</span>
+                  </div>
+                ) : null;
+              })()}
               {/* 女性の場合、右側（配偶者側）に配偶者の兄弟姉妹を配置 */}
-              {!isMale && data.spouseSiblings.filter(s => s.birthDate || s.manualShinso).slice(0, 2).map((s, i) => (
-                <div key={`sp-sib-right-${i}`}>
-                  {renderNode(s, `義兄弟姉妹${i + 1}`, '', `spouse-sibling-${i}`, 'right')}
-                </div>
-              ))}
+              {!isMale && (() => {
+                const sibs = data.spouseSiblings.filter(s => s.birthDate || s.manualShinso).slice(0, 2);
+                return sibs.length > 0 ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      {sibs.map((s, i) => (
+                        <div key={`sp-sib-right-${i}`}>{renderNode(s, `義兄弟姉妹${i + 1}`, '', `spouse-sibling-${i}`, 'right')}</div>
+                      ))}
+                    </div>
+                    <span style={{ fontSize: '9px', color: '#aaa', marginTop: '4px' }}>（順不同）</span>
+                  </div>
+                ) : null;
+              })()}
             </div>
 
           </div>
@@ -536,11 +568,6 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
       </div>
 
       </div>{/* End of print-content-wrapper */}
-
-      {/* 兄弟姉妹の注釈 — ツリーの外側に配置してSVGレイアウトに干渉しない */}
-      {(data.siblings.some(s => s.birthDate || s.manualShinso) || data.spouseSiblings.some(s => s.birthDate || s.manualShinso)) && (
-        <p style={{ textAlign: 'center', fontSize: '11px', color: '#999', margin: '8px 0 0' }}>※兄弟姉妹は入力順で記載しています（順不同）</p>
-      )}
       
       {/* 鑑定メモ — 最下部にフル幅で配置 */}
       {onMemoChange && (
