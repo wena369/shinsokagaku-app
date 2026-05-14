@@ -512,6 +512,11 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
 
         </div>
 
+        {/* 兄弟姉妹の注釈 — 兄弟姉妹ノードのすぐ下に配置 */}
+        {(data.siblings.some(s => s.birthDate || s.manualShinso) || data.spouseSiblings.some(s => s.birthDate || s.manualShinso)) && (
+          <p style={{ textAlign: 'center', fontSize: '11px', color: '#999', margin: '20px 0 0', width: '100%' }}>※兄弟姉妹は入力順で記載しています（順不同）</p>
+        )}
+
         {/* Row 4: Children & Grandchildren grouped */}
         {(data.children.some(c => c.birthDate || c.manualShinso) || data.grandchildren.some(g => g.birthDate || g.manualShinso)) && (
           <div className="gt-row children-row" style={{ alignItems: 'flex-start' }}>
@@ -536,11 +541,6 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
 
       </div>{/* End of print-content-wrapper */}
       
-      {/* 兄弟姉妹の注釈 */}
-      {(data.siblings.some(s => s.birthDate || s.manualShinso) || data.spouseSiblings.some(s => s.birthDate || s.manualShinso)) && (
-        <p style={{ textAlign: 'center', fontSize: '11px', color: '#999', margin: '4px 0 0' }}>※兄弟姉妹は入力順で記載しています（順不同）</p>
-      )}
-
       {/* 鑑定メモ — 最下部にフル幅で配置 */}
       {onMemoChange && (
         <div className="gt-memo-container" style={{ width: '100%', padding: '0 1rem', boxSizing: 'border-box' }}>
