@@ -368,12 +368,13 @@
   }
 
   .genealogy-tree-container {
-    overflow: hidden !important; /* Stop mysterious blank 2nd page */
-    max-height: 195mm !important; /* Bound to A4 landscape height approx */
+    overflow: hidden !important; 
+    max-height: 175mm !important; /* Extremely strict cap to prevent A4 landscape blank 2nd page */
     page-break-after: avoid;
     page-break-inside: avoid;
+    padding: 0 !important;
+    margin: 0 !important;
     box-shadow: none !important;
     border: none !important;
-    background: white !important;
   }
 }

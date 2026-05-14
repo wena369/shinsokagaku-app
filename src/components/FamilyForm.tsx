@@ -56,17 +56,20 @@ const FamilyForm: React.FC<Props> = ({ data, onChange }) => {
       const parts = path.split('.');
       const parentName = parts[0] as keyof FamilyData;
       const index = parseInt(parts[1], 10);
-      const list = newData[parentName] as any[];
-      list[index][field] = value;
+      const list = [...(newData[parentName] as any[])];
+      list[index] = { ...list[index], [field]: value };
+      (newData as any)[parentName] = list;
     } else {
-      (newData as any)[path][field] = value;
+      (newData as any)[path] = { ...(newData as any)[path], [field]: value };
     }
     onChange(newData);
   };
 
   const renderInputGroup = (title: string, path: string, icon: ReactNode, id: string) => {
     const isOpen = activeSection === id;
-    const member = (data as any)[path];
+    const member = path.includes('.') 
+      ? (data as any)[path.split('.')[0]][parseInt(path.split('.')[1])]
+      : (data as any)[path];
 
     return (
       <div className={`form-section ${id === 'self' ? 'priority' : ''} ${isOpen ? 'active' : ''}`}>
@@ -90,7 +93,7 @@ const FamilyForm: React.FC<Props> = ({ data, onChange }) => {
               />
             </div>
             <div className="input-fields-grid">
-              {(id === 'self' || id === 'spouse') && (
+              {(id === 'self' || id === 'spouse' || id.startsWith('interestedPeople')) && (
                 <div className="input-row">
                   <label>性別 <small>(必須)</small></label>
                   <div className="gender-toggle-group">
@@ -135,53 +138,19 @@ const FamilyForm: React.FC<Props> = ({ data, onChange }) => {
     );
   };
 
-  const renderListGroup = (title: string, path: string, count: number, icon: React.ReactNode, id: string) => {
-    const isOpen = activeSection === id;
-    const list = (data as any)[path];
-
+  const renderListGroup = (title: string, pathPrefix: keyof FamilyData, maxCount: number, icon: ReactNode, groupId: string) => {
+    const list = data[pathPrefix] as any[];
     return (
-      <div className={`form-section ${isOpen ? 'active' : ''}`}>
-        <div className="section-header" onClick={() => setActiveSection(isOpen ? null : id)}>
-          <div className="title-area">
-            {icon}
-            <span className="section-title">{title} <small>({count}名まで)</small></span>
-          </div>
-          {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-        </div>
-
-        {isOpen && (
-          <div className="section-content">
-            {list.map((member: any, i: number) => (
-              <div key={i} className="list-item-form">
-                <span className="item-label">{i + 1}人目</span>
-                <div className="item-inputs">
-                  <input 
-                    type="text" 
-                    className="name-input"
-                    value={member.name} 
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => updateMember(`${path}.${i}`, 'name', e.target.value)}
-                    placeholder="お名前"
-                  />
-                  <div className="secondary-inputs">
-                    <DateInputWithPicker 
-                      className="date-input"
-                      value={member.birthDate} 
-                      onChange={(val) => updateMember(`${path}.${i}`, 'birthDate', val)}
-                    />
-                    <input 
-                      type="text" 
-                      className="shinso-input"
-                      maxLength={3}
-                      value={member.manualShinso || ''} 
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => updateMember(`${path}.${i}`, 'manualShinso', e.target.value)}
-                      placeholder="心相数"
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+      <div className="children-group">
+        {Array.from({ length: maxCount }).map((_, i) => {
+          const isFilled = list[i]?.name || list[i]?.birthDate;
+          return renderInputGroup(
+            `${title} ${i + 1}${isFilled ? ` (${list[i].name || '入力済'})` : ''}`, 
+            `${pathPrefix}.${i}`, 
+            icon, 
+            `${groupId}-${i}`
+          );
+        })}
       </div>
     );
   };
@@ -193,6 +162,11 @@ const FamilyForm: React.FC<Props> = ({ data, onChange }) => {
       <div className="form-sections">
         {renderInputGroup("自分 (優先)", "self", <User size={24} />, "self")}
         {renderInputGroup("配偶者", "spouse", <Heart size={20} />, "spouse")}
+        
+        <div className="list-col" style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+          <h3 className="sub-header">気になる人 (相性鑑定用)</h3>
+          {renderListGroup("気になる人", "interestedPeople", 4, <Users size={20} />, "interestedPeople")}
+        </div>
         
         <div className="children-group">
           <div className="list-col">

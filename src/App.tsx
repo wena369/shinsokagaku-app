@@ -42,15 +42,26 @@ function App() {
   const handleBatchPrint = () => {
     setIsBatchPrinting(true);
     setTimeout(() => {
+      const handleAfterPrint = () => {
+        setIsBatchPrinting(false);
+        window.removeEventListener('afterprint', handleAfterPrint);
+      };
+      window.addEventListener('afterprint', handleAfterPrint);
       window.print();
-      // ブラウザの印刷ダイアログ表示後に元の画面に戻す
-      setIsBatchPrinting(false);
-    }, 500);
+    }, 800); // 800ms to ensure all charts render properly
   };
 
   if (isBatchPrinting) {
     return (
       <div className="batch-print-container">
+        <div className="print-hide" style={{ padding: '1rem', textAlign: 'center', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', marginBottom: '1rem' }}>
+          <button onClick={() => setIsBatchPrinting(false)} style={{ padding: '0.6rem 1.2rem', background: '#ef4444', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
+            元の画面に戻る
+          </button>
+          <button onClick={() => window.print()} style={{ marginLeft: '1rem', padding: '0.6rem 1.2rem', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
+            印刷ダイアログを再度開く
+          </button>
+        </div>
         <div className="batch-page-portrait-bleed">
           <CoverPage familyName={familyName} />
         </div>

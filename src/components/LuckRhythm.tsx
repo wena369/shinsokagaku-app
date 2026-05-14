@@ -322,11 +322,13 @@ const LuckRhythm: React.FC<Props> = ({ data, memo = "", onMemoChange, isBatchPri
                 
                 return (
                   <g key={idx} className="member-marker">
-                    <foreignObject x={p.x - 50} y={yOffset} width="100" height="30" overflow="visible">
-                      <div className="member-avatar-tag" style={{ backgroundColor: m.luckColor || (idx % 2 === 0 ? '#3b82f6' : '#10b981'), color: getTextColor(m.luckColor) }}>
-                        {m.name || m.label}
-                      </div>
-                    </foreignObject>
+                    <g transform={`translate(${p.x - 50}, ${yOffset})`}>
+                      <foreignObject x="0" y="0" width="100" height="30">
+                        <div className="member-avatar-tag" style={{ backgroundColor: m.luckColor || (idx % 2 === 0 ? '#3b82f6' : '#10b981'), color: getTextColor(m.luckColor), width: '100%', height: '100%', boxSizing: 'border-box', margin: 0, transform: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          {m.name || m.label}
+                        </div>
+                      </foreignObject>
+                    </g>
                     {/* Connecting line to the point only on the first member */}
                     {m.stackOrder === 0 && (
                       <line x1={p.x} y1={p.y} x2={p.x} y2={yOffset + 30} stroke="#94a3b8" strokeWidth="1" />
