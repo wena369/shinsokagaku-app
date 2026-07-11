@@ -121,111 +121,97 @@ h1, h2, h3, .shinso-number {
     background: white !important;
     width: 100% !important;
     height: auto !important;
+    min-height: auto !important;
   }
 
-  /* デフォルトのページサイズをA4縦に指定（名前付きページバグ回避のため） */
+  /* デフォルトのページサイズを指定 */
   @page {
     size: A4 portrait;
-    margin: 10mm;
+    margin: 0 !important; /* マージン衝突を避けるため0に固定 */
   }
 
   @page landscape-view {
     size: A4 landscape;
-    margin: 10mm;
+    margin: 0 !important;
   }
 
   @page portrait-view {
     size: A4 portrait;
-    margin: 10mm;
+    margin: 0 !important;
   }
 
   @page portrait-view-bleed {
     size: A4 portrait;
-    margin: 0;
+    margin: 0 !important;
   }
 
   @page landscape-view-bleed {
     size: A4 landscape;
-    margin: 0;
+    margin: 0 !important;
   }
 
-  /* 縦向き用のコンテナ（余白あり・名前付きページバグ回避のため明示指定） */
+  /* 縦向き用のコンテナ（余白あり） */
   .batch-page-portrait {
     page: portrait-view;
     background: white;
-    height: 275mm !important;
-    max-height: 275mm !important;
-    overflow: hidden !important;
-    position: relative;
+    width: 100% !important;
+    height: 100vh !important; /* A4用紙の高さに自動フィット */
+    page-break-after: always !important;
+    break-after: page !important;
     box-sizing: border-box;
-    margin: 0 !important;
-    padding: 0 !important;
+    padding: 15mm 10mm 10mm 10mm; /* 安全な余白設定 */
+    overflow: visible !important; /* はみ出しによる白紙化防止 */
+    position: relative;
   }
 
   /* 横向き用のコンテナ（余白あり） */
   .batch-page-landscape {
     page: landscape-view;
     background: white;
-    height: 188mm !important;
-    max-height: 188mm !important;
-    overflow: hidden !important;
-    position: relative;
+    width: 100% !important;
+    height: 100vh !important;
+    page-break-after: always !important;
+    break-after: page !important;
     box-sizing: border-box;
-    margin: 0 !important;
-    padding: 0 !important;
+    padding: 15mm 10mm 10mm 10mm;
+    overflow: visible !important;
+    position: relative;
   }
 
   /* 縦向き用のコンテナ（余白なし: 表紙用） */
   .batch-page-portrait-bleed {
     page: portrait-view-bleed;
     background: white;
-    height: 295mm !important;
-    max-height: 295mm !important;
-    overflow: hidden !important;
-    position: relative;
+    width: 100% !important;
+    height: 100vh !important;
+    page-break-after: always !important;
+    break-after: page !important;
     box-sizing: border-box;
-    margin: 0 !important;
     padding: 0 !important;
+    overflow: visible !important;
+    position: relative;
   }
 
   /* 横向き用のコンテナ（余白なし: 家系図用） */
   .batch-page-landscape-bleed {
     page: landscape-view-bleed;
     background: white;
-    height: 208mm !important;
-    max-height: 208mm !important;
-    overflow: hidden !important;
-    position: relative;
+    width: 100% !important;
+    height: 100vh !important;
+    page-break-after: always !important;
+    break-after: page !important;
     box-sizing: border-box;
-    margin: 0 !important;
     padding: 0 !important;
+    overflow: visible !important;
+    position: relative;
   }
 
-  /* 明示的な強制改ページ（オリエンテーション混在時のChromeの二重改ページを避けるため、各同方向連続時にのみbreakする等ではなくシンプルにコンテナ後要素で分ける） */
-  .batch-print-container > div {
-    page-break-after: always;
-    break-after: page;
-  }
-
-  /* 最後のページ後は改ページしない */
-  .batch-print-container > div:last-child {
-    page-break-after: avoid;
-    break-after: avoid;
-  }
-
-  /* 内部要素が外側の改ページを誘発しないようにフタをする */
-  .batch-print-container * {
-    page-break-after: auto;
-    break-after: auto;
-    page-break-before: auto;
-    break-before: auto;
-  }
-
-  /* 上書き防止のため !important でコンテナの改ページを保護 */
+  /* 改ページ設定の最適化 */
   .batch-print-container > div {
     page-break-after: always !important;
     break-after: page !important;
   }
+
   .batch-print-container > div:last-child {
     page-break-after: avoid !important;
     break-after: avoid !important;
