@@ -120,7 +120,7 @@ const FamilyForm: React.FC<Props> = ({ data, onChange }) => {
               />
             </div>
             <div className="input-fields-grid">
-              {(id === 'self' || id === 'spouse' || id.startsWith('interestedPeople')) && (
+              {(id === 'self' || id === 'spouse' || id.startsWith('interestedPeople') || id.startsWith('siblings-') || id.startsWith('spouseSiblings-')) && (
                 <div className="input-row">
                   <label>性別 <small>(必須)</small></label>
                   <div className="gender-toggle-group">

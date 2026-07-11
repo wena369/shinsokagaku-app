@@ -309,9 +309,25 @@ function App() {
                   <ShinsoKarte name={data.maternalGrandmother.name} birthDate={data.maternalGrandmother.birthDate} manualShinso={data.maternalGrandmother.manualShinso} relationship="母方祖母" memo={memos["karte_mGM"] || ""} onMemoChange={(m) => updateMemo("karte_mGM", m)} />
                 )}
 
-                {data.siblings.filter((s: any) => s.birthDate || s.manualShinso).map((s: any, i: number) => (
-                  <ShinsoKarte key={`sibling-${i}`} name={s.name} birthDate={s.birthDate} manualShinso={s.manualShinso} relationship={`兄弟姉妹 ${i+1}`} memo={memos[`karte_sib_${i}`] || ""} onMemoChange={(m) => updateMemo(`karte_sib_${i}`, m)} />
-                ))}
+                {data.siblings.filter((s: any) => s.birthDate || s.manualShinso).flatMap((s: any, i: number) => {
+                  const cards = [];
+                  cards.push(
+                    <ShinsoKarte key={`sibling-${i}`} name={s.name} birthDate={s.birthDate} manualShinso={s.manualShinso} relationship={`兄弟姉妹 ${i+1}`} memo={memos[`karte_sib_${i}`] || ""} onMemoChange={(m) => updateMemo(`karte_sib_${i}`, m)} />
+                  );
+                  if (s.spouse && (s.spouse.birthDate || s.spouse.manualShinso)) {
+                    cards.push(
+                      <ShinsoKarte key={`sibling-${i}-spouse`} name={s.spouse.name} birthDate={s.spouse.birthDate} manualShinso={s.spouse.manualShinso} relationship={`兄弟姉妹 ${i+1}の配偶者`} memo={memos[`karte_sib_${i}_spouse`] || ""} onMemoChange={(m) => updateMemo(`karte_sib_${i}_spouse`, m)} />
+                    );
+                  }
+                  if (s.children) {
+                    s.children.filter((c: any) => c.birthDate || c.manualShinso).forEach((c: any, ci: number) => {
+                      cards.push(
+                        <ShinsoKarte key={`sibling-${i}-child-${ci}`} name={c.name} birthDate={c.birthDate} manualShinso={c.manualShinso} relationship={`兄弟姉妹 ${i+1}の子 ${ci+1}`} memo={memos[`karte_sib_${i}_child_${ci}`] || ""} onMemoChange={(m) => updateMemo(`karte_sib_${i}_child_${ci}`, m)} />
+                      );
+                    });
+                  }
+                  return cards;
+                })}
 
                 {data.interestedPeople.filter((p: any) => p.birthDate || p.manualShinso).map((p: any, i: number) => (
                   <ShinsoKarte key={`interested-${i}`} name={p.name} birthDate={p.birthDate} manualShinso={p.manualShinso} relationship={`気になる人 ${i+1}`} memo={memos[`karte_int_${i}`] || ""} onMemoChange={(m) => updateMemo(`karte_int_${i}`, m)} />

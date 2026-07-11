@@ -27,18 +27,24 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
     .map((s, i) => ({ ...s, originalIndex: i }))
     .filter(s => s.birthDate || s.manualShinso);
   sortedSibs.sort((a, b) => {
-    if (!a.birthDate) return 1;
-    if (!b.birthDate) return -1;
-    return a.birthDate < b.birthDate ? 1 : -1;
+    const dateA = a.birthDate || '';
+    const dateB = b.birthDate || '';
+    if (!dateA && !dateB) return 0;
+    if (!dateA) return 1;
+    if (!dateB) return -1;
+    return dateA < dateB ? 1 : -1;
   });
 
   const sortedSpouseSibs = [...data.spouseSiblings]
     .map((s, i) => ({ ...s, originalIndex: i }))
     .filter(s => s.birthDate || s.manualShinso);
   sortedSpouseSibs.sort((a, b) => {
-    if (!a.birthDate) return 1;
-    if (!b.birthDate) return -1;
-    return a.birthDate < b.birthDate ? 1 : -1;
+    const dateA = a.birthDate || '';
+    const dateB = b.birthDate || '';
+    if (!dateA && !dateB) return 0;
+    if (!dateA) return 1;
+    if (!dateB) return -1;
+    return dateA < dateB ? 1 : -1;
   });
 
   const renderNode = (member: any, title: string, colorClass: string, id: string, side: 'left' | 'right' = 'left') => {
@@ -205,7 +211,14 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
           .filter(({ c }) => c.birthDate || c.manualShinso)
           .map(({ ci }) => `sibling-${idx}-child-${ci}`);
         
-        drawLine(`sibling-${idx}`, `sibling-${idx}-spouse`, childrenIds);
+        const isSibMale = s.gender !== 'female';
+        if (isSibMale) {
+          // 配偶者が左、本人が右
+          drawLine(`sibling-${idx}-spouse`, `sibling-${idx}`, childrenIds);
+        } else {
+          // 本人が左、配偶者が右
+          drawLine(`sibling-${idx}`, `sibling-${idx}-spouse`, childrenIds);
+        }
       }
     });
 
@@ -219,7 +232,14 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
           .filter(({ c }) => c.birthDate || c.manualShinso)
           .map(({ ci }) => `spouse-sibling-${idx}-child-${ci}`);
         
-        drawLine(`spouse-sibling-${idx}`, `spouse-sibling-${idx}-spouse`, childrenIds);
+        const isSibMale = s.gender !== 'female';
+        if (isSibMale) {
+          // 配偶者が左、本人が右
+          drawLine(`spouse-sibling-${idx}-spouse`, `spouse-sibling-${idx}`, childrenIds);
+        } else {
+          // 本人が左、配偶者が右
+          drawLine(`spouse-sibling-${idx}`, `spouse-sibling-${idx}-spouse`, childrenIds);
+        }
       }
     });
 
@@ -500,14 +520,25 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
                     <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-end' }}>
                       {sibs.map((s) => {
                         const hasFamily = (s.spouse && (s.spouse.name || s.spouse.birthDate || s.spouse.manualShinso)) || (s.children && s.children.some(c => c.name || c.birthDate || c.manualShinso));
+                        const isSibMale = s.gender !== 'female';
+                        const combined = getCombinedInfo(s, s.spouse);
                         if (hasFamily) {
-                          const combined = getCombinedInfo(s, s.spouse);
                           return (
                             <div key={`sib-fam-left-${s.originalIndex}`} className="sibling-family-unit">
                               <div className="gt-pair">
-                                {renderNode(s, `兄弟姉妹${s.originalIndex + 1}`, '', `sibling-${s.originalIndex}`, 'left')}
-                                {renderCombined(combined)}
-                                {renderNode(s.spouse, '配偶者', '', `sibling-${s.originalIndex}-spouse`, 'right')}
+                                {isSibMale ? (
+                                  <>
+                                    {renderNode(s.spouse, '配偶者', '', `sibling-${s.originalIndex}-spouse`, 'left')}
+                                    {renderCombined(combined)}
+                                    {renderNode(s, `兄弟姉妹${s.originalIndex + 1}`, '', `sibling-${s.originalIndex}`, 'right')}
+                                  </>
+                                ) : (
+                                  <>
+                                    {renderNode(s, `兄弟姉妹${s.originalIndex + 1}`, '', `sibling-${s.originalIndex}`, 'left')}
+                                    {renderCombined(combined)}
+                                    {renderNode(s.spouse, '配偶者', '', `sibling-${s.originalIndex}-spouse`, 'right')}
+                                  </>
+                                )}
                               </div>
                               <div className="sibling-children-row">
                                 {(s.children || [])
@@ -536,15 +567,54 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
               })()}
               {/* 男性の場合、左側（配偶者側）に配偶者の兄弟姉妹を配置 */}
               {isMale && (() => {
-                const sibs = data.spouseSiblings.filter(s => s.birthDate || s.manualShinso).slice(0, 2);
+                const sibs = sortedSpouseSibs;
                 return sibs.length > 0 ? (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      {sibs.map((s, i) => (
-                        <div key={`sp-sib-left-${i}`}>{renderNode(s, `義兄弟姉妹${i + 1}`, '', `spouse-sibling-${i}`, 'left')}</div>
-                      ))}
+                    <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-end' }}>
+                      {sibs.map((s) => {
+                        const hasFamily = (s.spouse && (s.spouse.name || s.spouse.birthDate || s.spouse.manualShinso)) || (s.children && s.children.some(c => c.name || c.birthDate || c.manualShinso));
+                        const isSibMale = s.gender !== 'female';
+                        const combined = getCombinedInfo(s, s.spouse);
+                        if (hasFamily) {
+                          return (
+                            <div key={`sp-sib-fam-left-${s.originalIndex}`} className="sibling-family-unit">
+                              <div className="gt-pair">
+                                {isSibMale ? (
+                                  <>
+                                    {renderNode(s.spouse, '配偶者', '', `spouse-sibling-${s.originalIndex}-spouse`, 'left')}
+                                    {renderCombined(combined)}
+                                    {renderNode(s, `義兄弟姉妹${s.originalIndex + 1}`, '', `spouse-sibling-${s.originalIndex}`, 'right')}
+                                  </>
+                                ) : (
+                                  <>
+                                    {renderNode(s, `義兄弟姉妹${s.originalIndex + 1}`, '', `spouse-sibling-${s.originalIndex}`, 'left')}
+                                    {renderCombined(combined)}
+                                    {renderNode(s.spouse, '配偶者', '', `spouse-sibling-${s.originalIndex}-spouse`, 'right')}
+                                  </>
+                                )}
+                              </div>
+                              <div className="sibling-children-row">
+                                {(s.children || [])
+                                  .map((c, ci) => ({ c, ci }))
+                                  .filter(({ c }) => c.birthDate || c.manualShinso)
+                                  .map(({ c, ci }) => (
+                                    <div key={`sp-sib-child-${s.originalIndex}-${ci}`}>
+                                      {renderNode(c, `子${ci + 1}`, '', `spouse-sibling-${s.originalIndex}-child-${ci}`, 'left')}
+                                    </div>
+                                  ))}
+                              </div>
+                            </div>
+                          );
+                        } else {
+                          return (
+                            <div key={`sp-sib-left-${s.originalIndex}`}>
+                              {renderNode(s, `義兄弟姉妹${s.originalIndex + 1}`, '', `spouse-sibling-${s.originalIndex}`, 'left')}
+                            </div>
+                          );
+                        }
+                      })}
                     </div>
-                    <span style={{ fontSize: '9px', color: '#aaa', marginTop: '4px' }}>（順不同）</span>
+                    <span style={{ fontSize: '9px', color: '#aaa', marginTop: '4px' }}>（年齢順）</span>
                   </div>
                 ) : null;
               })()}
@@ -593,14 +663,25 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
                     <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-end' }}>
                       {sibs.map((s) => {
                         const hasFamily = (s.spouse && (s.spouse.name || s.spouse.birthDate || s.spouse.manualShinso)) || (s.children && s.children.some(c => c.name || c.birthDate || c.manualShinso));
+                        const isSibMale = s.gender !== 'female';
+                        const combined = getCombinedInfo(s, s.spouse);
                         if (hasFamily) {
-                          const combined = getCombinedInfo(s, s.spouse);
                           return (
                             <div key={`sib-fam-right-${s.originalIndex}`} className="sibling-family-unit">
                               <div className="gt-pair">
-                                {renderNode(s, `兄弟姉妹${s.originalIndex + 1}`, '', `sibling-${s.originalIndex}`, 'left')}
-                                {renderCombined(combined)}
-                                {renderNode(s.spouse, '配偶者', '', `sibling-${s.originalIndex}-spouse`, 'right')}
+                                {isSibMale ? (
+                                  <>
+                                    {renderNode(s.spouse, '配偶者', '', `sibling-${s.originalIndex}-spouse`, 'left')}
+                                    {renderCombined(combined)}
+                                    {renderNode(s, `兄弟姉妹${s.originalIndex + 1}`, '', `sibling-${s.originalIndex}`, 'right')}
+                                  </>
+                                ) : (
+                                  <>
+                                    {renderNode(s, `兄弟姉妹${s.originalIndex + 1}`, '', `sibling-${s.originalIndex}`, 'left')}
+                                    {renderCombined(combined)}
+                                    {renderNode(s.spouse, '配偶者', '', `sibling-${s.originalIndex}-spouse`, 'right')}
+                                  </>
+                                )}
                               </div>
                               <div className="sibling-children-row">
                                 {(s.children || [])
@@ -635,14 +716,25 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
                     <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-end' }}>
                       {sibs.map((s) => {
                         const hasFamily = (s.spouse && (s.spouse.name || s.spouse.birthDate || s.spouse.manualShinso)) || (s.children && s.children.some(c => c.name || c.birthDate || c.manualShinso));
+                        const isSibMale = s.gender !== 'female';
+                        const combined = getCombinedInfo(s, s.spouse);
                         if (hasFamily) {
-                          const combined = getCombinedInfo(s, s.spouse);
                           return (
                             <div key={`sp-sib-fam-right-${s.originalIndex}`} className="sibling-family-unit">
                               <div className="gt-pair">
-                                {renderNode(s, `義兄弟姉妹${s.originalIndex + 1}`, '', `spouse-sibling-${s.originalIndex}`, 'left')}
-                                {renderCombined(combined)}
-                                {renderNode(s.spouse, '配偶者', '', `spouse-sibling-${s.originalIndex}-spouse`, 'right')}
+                                {isSibMale ? (
+                                  <>
+                                    {renderNode(s.spouse, '配偶者', '', `spouse-sibling-${s.originalIndex}-spouse`, 'left')}
+                                    {renderCombined(combined)}
+                                    {renderNode(s, `義兄弟姉妹${s.originalIndex + 1}`, '', `spouse-sibling-${s.originalIndex}`, 'right')}
+                                  </>
+                                ) : (
+                                  <>
+                                    {renderNode(s, `義兄弟姉妹${s.originalIndex + 1}`, '', `spouse-sibling-${s.originalIndex}`, 'left')}
+                                    {renderCombined(combined)}
+                                    {renderNode(s.spouse, '配偶者', '', `spouse-sibling-${s.originalIndex}-spouse`, 'right')}
+                                  </>
+                                )}
                               </div>
                               <div className="sibling-children-row">
                                 {(s.children || [])
