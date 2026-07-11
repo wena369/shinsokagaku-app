@@ -295,13 +295,13 @@ export function getLuckPositionIndex(targetYear: number, luckNumber: number): nu
 export const LUCK_ZONE_LABELS = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
 
 export function parseDate(dateStr: string) {
-  if (!dateStr) return { year: 0, month: 0, day: 0 };
-  const parts = dateStr.split('-');
-  return {
-    year: parseInt(parts[0], 10),
-    month: parseInt(parts[1], 10),
-    day: parseInt(parts[2], 10)
-  };
+  if (!dateStr) return { year: 1980, month: 1, day: 1 };
+  const normalized = dateStr.replace(/\//g, '-');
+  const parts = normalized.split('-');
+  const year = parseInt(parts[0], 10) || 1980;
+  const month = parseInt(parts[1], 10) || 1;
+  const day = parseInt(parts[2], 10) || 1;
+  return { year, month, day };
 }
 
 export interface FamilyMember {
