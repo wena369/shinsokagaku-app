@@ -206,10 +206,18 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
       const idx = s.originalIndex;
       const hasFamily = (s.spouse && (s.spouse.name || s.spouse.birthDate || s.spouse.manualShinso)) || (s.children && s.children.some(c => c.name || c.birthDate || c.manualShinso));
       if (hasFamily) {
-        const childrenIds = (s.children || [])
-          .map((c, ci) => ({ c, ci }))
-          .filter(({ c }) => c.birthDate || c.manualShinso)
-          .map(({ ci }) => `sibling-${idx}-child-${ci}`);
+        const sortedChildren = [...(s.children || [])]
+          .map((c, ci) => ({ ...c, originalIndex: ci }))
+          .filter(c => c.birthDate || c.manualShinso);
+        sortedChildren.sort((a, b) => {
+          const dateA = a.birthDate || '';
+          const dateB = b.birthDate || '';
+          if (!dateA && !dateB) return 0;
+          if (!dateA) return 1;
+          if (!dateB) return -1;
+          return dateA < dateB ? 1 : -1;
+        });
+        const childrenIds = sortedChildren.map(c => `sibling-${idx}-child-${c.originalIndex}`);
         
         const isSibMale = s.gender !== 'female';
         if (isSibMale) {
@@ -227,10 +235,18 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
       const idx = s.originalIndex;
       const hasFamily = (s.spouse && (s.spouse.name || s.spouse.birthDate || s.spouse.manualShinso)) || (s.children && s.children.some(c => c.name || c.birthDate || c.manualShinso));
       if (hasFamily) {
-        const childrenIds = (s.children || [])
-          .map((c, ci) => ({ c, ci }))
-          .filter(({ c }) => c.birthDate || c.manualShinso)
-          .map(({ ci }) => `spouse-sibling-${idx}-child-${ci}`);
+        const sortedChildren = [...(s.children || [])]
+          .map((c, ci) => ({ ...c, originalIndex: ci }))
+          .filter(c => c.birthDate || c.manualShinso);
+        sortedChildren.sort((a, b) => {
+          const dateA = a.birthDate || '';
+          const dateB = b.birthDate || '';
+          if (!dateA && !dateB) return 0;
+          if (!dateA) return 1;
+          if (!dateB) return -1;
+          return dateA < dateB ? 1 : -1;
+        });
+        const childrenIds = sortedChildren.map(c => `spouse-sibling-${idx}-child-${c.originalIndex}`);
         
         const isSibMale = s.gender !== 'female';
         if (isSibMale) {
@@ -541,14 +557,24 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
                                 )}
                               </div>
                               <div className="sibling-children-row">
-                                {(s.children || [])
-                                  .map((c, ci) => ({ c, ci }))
-                                  .filter(({ c }) => c.birthDate || c.manualShinso)
-                                  .map(({ c, ci }) => (
-                                    <div key={`sib-child-${s.originalIndex}-${ci}`}>
-                                      {renderNode(c, `子${ci + 1}`, '', `sibling-${s.originalIndex}-child-${ci}`, 'left')}
+                                {(() => {
+                                  const sortedChildren = [...(s.children || [])]
+                                    .map((c, ci) => ({ ...c, originalIndex: ci }))
+                                    .filter(c => c.birthDate || c.manualShinso);
+                                  sortedChildren.sort((a, b) => {
+                                    const dateA = a.birthDate || '';
+                                    const dateB = b.birthDate || '';
+                                    if (!dateA && !dateB) return 0;
+                                    if (!dateA) return 1;
+                                    if (!dateB) return -1;
+                                    return dateA < dateB ? 1 : -1;
+                                  });
+                                  return sortedChildren.map((c) => (
+                                    <div key={`sib-child-${s.originalIndex}-${c.originalIndex}`}>
+                                      {renderNode(c, `子${c.originalIndex + 1}`, '', `sibling-${s.originalIndex}-child-${c.originalIndex}`, 'left')}
                                     </div>
-                                  ))}
+                                  ));
+                                })()}
                               </div>
                             </div>
                           );
@@ -594,14 +620,24 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
                                 )}
                               </div>
                               <div className="sibling-children-row">
-                                {(s.children || [])
-                                  .map((c, ci) => ({ c, ci }))
-                                  .filter(({ c }) => c.birthDate || c.manualShinso)
-                                  .map(({ c, ci }) => (
-                                    <div key={`sp-sib-child-${s.originalIndex}-${ci}`}>
-                                      {renderNode(c, `子${ci + 1}`, '', `spouse-sibling-${s.originalIndex}-child-${ci}`, 'left')}
+                                {(() => {
+                                  const sortedChildren = [...(s.children || [])]
+                                    .map((c, ci) => ({ ...c, originalIndex: ci }))
+                                    .filter(c => c.birthDate || c.manualShinso);
+                                  sortedChildren.sort((a, b) => {
+                                    const dateA = a.birthDate || '';
+                                    const dateB = b.birthDate || '';
+                                    if (!dateA && !dateB) return 0;
+                                    if (!dateA) return 1;
+                                    if (!dateB) return -1;
+                                    return dateA < dateB ? 1 : -1;
+                                  });
+                                  return sortedChildren.map((c) => (
+                                    <div key={`sp-sib-child-${s.originalIndex}-${c.originalIndex}`}>
+                                      {renderNode(c, `子${c.originalIndex + 1}`, '', `spouse-sibling-${s.originalIndex}-child-${c.originalIndex}`, 'left')}
                                     </div>
-                                  ))}
+                                  ));
+                                })()}
                               </div>
                             </div>
                           );
@@ -684,14 +720,24 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
                                 )}
                               </div>
                               <div className="sibling-children-row">
-                                {(s.children || [])
-                                  .map((c, ci) => ({ c, ci }))
-                                  .filter(({ c }) => c.birthDate || c.manualShinso)
-                                  .map(({ c, ci }) => (
-                                    <div key={`sib-child-${s.originalIndex}-${ci}`}>
-                                      {renderNode(c, `子${ci + 1}`, '', `sibling-${s.originalIndex}-child-${ci}`, 'right')}
+                                {(() => {
+                                  const sortedChildren = [...(s.children || [])]
+                                    .map((c, ci) => ({ ...c, originalIndex: ci }))
+                                    .filter(c => c.birthDate || c.manualShinso);
+                                  sortedChildren.sort((a, b) => {
+                                    const dateA = a.birthDate || '';
+                                    const dateB = b.birthDate || '';
+                                    if (!dateA && !dateB) return 0;
+                                    if (!dateA) return 1;
+                                    if (!dateB) return -1;
+                                    return dateA < dateB ? 1 : -1;
+                                  });
+                                  return sortedChildren.map((c) => (
+                                    <div key={`sib-child-${s.originalIndex}-${c.originalIndex}`}>
+                                      {renderNode(c, `子${c.originalIndex + 1}`, '', `sibling-${s.originalIndex}-child-${c.originalIndex}`, 'right')}
                                     </div>
-                                  ))}
+                                  ));
+                                })()}
                               </div>
                             </div>
                           );
@@ -737,14 +783,24 @@ const GenealogyTree: React.FC<Props> = ({ data, memo = "", onMemoChange, familyN
                                 )}
                               </div>
                               <div className="sibling-children-row">
-                                {(s.children || [])
-                                  .map((c, ci) => ({ c, ci }))
-                                  .filter(({ c }) => c.birthDate || c.manualShinso)
-                                  .map(({ c, ci }) => (
-                                    <div key={`sp-sib-child-${s.originalIndex}-${ci}`}>
-                                      {renderNode(c, `子${ci + 1}`, '', `spouse-sibling-${s.originalIndex}-child-${ci}`, 'right')}
+                                {(() => {
+                                  const sortedChildren = [...(s.children || [])]
+                                    .map((c, ci) => ({ ...c, originalIndex: ci }))
+                                    .filter(c => c.birthDate || c.manualShinso);
+                                  sortedChildren.sort((a, b) => {
+                                    const dateA = a.birthDate || '';
+                                    const dateB = b.birthDate || '';
+                                    if (!dateA && !dateB) return 0;
+                                    if (!dateA) return 1;
+                                    if (!dateB) return -1;
+                                    return dateA < dateB ? 1 : -1;
+                                  });
+                                  return sortedChildren.map((c) => (
+                                    <div key={`sp-sib-child-${s.originalIndex}-${c.originalIndex}`}>
+                                      {renderNode(c, `子${c.originalIndex + 1}`, '', `spouse-sibling-${s.originalIndex}-child-${c.originalIndex}`, 'right')}
                                     </div>
-                                  ))}
+                                  ));
+                                })()}
                               </div>
                             </div>
                           );

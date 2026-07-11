@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import FamilyForm from './components/FamilyForm';
 import GenealogyTree from './components/GenealogyTree';
 import ShinsoKarte from './components/ShinsoKarte';
@@ -31,6 +31,31 @@ function App() {
     birthDate: '',
     manualShinso: ''
   });
+
+  // 気になる人の1人目が入力・更新されたら自動的に相性鑑定の「相手」に反映
+  useEffect(() => {
+    const firstInterested = data.interestedPeople?.[0];
+    if (firstInterested && (firstInterested.name || firstInterested.birthDate || firstInterested.manualShinso)) {
+      if (
+        compatibilityPartner.name !== (firstInterested.name || '') ||
+        compatibilityPartner.gender !== (firstInterested.gender || 'female') ||
+        compatibilityPartner.birthDate !== (firstInterested.birthDate || '') ||
+        compatibilityPartner.manualShinso !== (firstInterested.manualShinso || '')
+      ) {
+        setCompatibilityPartner({
+          name: firstInterested.name || '',
+          gender: firstInterested.gender || 'female',
+          birthDate: firstInterested.birthDate || '',
+          manualShinso: firstInterested.manualShinso || ''
+        });
+      }
+    }
+  }, [
+    data.interestedPeople?.[0]?.name,
+    data.interestedPeople?.[0]?.gender,
+    data.interestedPeople?.[0]?.birthDate,
+    data.interestedPeople?.[0]?.manualShinso
+  ]);
 
   // 鑑定メモ（自由記入欄）の永続化
   const [memos, setMemos] = useState<Record<string, string>>({});

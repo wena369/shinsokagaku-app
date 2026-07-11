@@ -167,7 +167,41 @@ const LuckRhythm: React.FC<Props> = ({ data, memo = "", onMemoChange, isBatchPri
     addMember(data.spouse, "配偶者");
     addMember(data.father, "父親");
     addMember(data.mother, "母親");
+    addMember(data.paternalGrandfather, "父方祖父");
+    addMember(data.paternalGrandmother, "父方祖母");
+    addMember(data.maternalGrandfather, "母方祖父");
+    addMember(data.maternalGrandmother, "母方祖母");
+    addMember(data.spouseFather, "義父");
+    addMember(data.spouseMother, "義母");
+
+    data.siblings.forEach((s: any, i: number) => {
+      addMember(s, `兄弟姉妹 ${i+1}`);
+      if (s.spouse) {
+        addMember(s.spouse, `兄弟姉妹 ${i+1}の配偶者`);
+      }
+      if (s.children) {
+        s.children.forEach((c: any, ci: number) => {
+          addMember(c, `兄弟姉妹 ${i+1}の子 ${ci+1}`);
+        });
+      }
+    });
+
+    data.spouseSiblings.forEach((s: any, i: number) => {
+      addMember(s, `義兄弟姉妹 ${i+1}`);
+      if (s.spouse) {
+        addMember(s.spouse, `義兄弟姉妹 ${i+1}の配偶者`);
+      }
+      if (s.children) {
+        s.children.forEach((c: any, ci: number) => {
+          addMember(c, `義兄弟姉妹 ${i+1}の子 ${ci+1}`);
+        });
+      }
+    });
+
     data.children.forEach((c: any, i: number) => addMember(c, `子供 ${i+1}`));
+    data.grandchildren.forEach((g: any, i: number) => addMember(g, `孫 ${i+1}`));
+    data.interestedPeople.forEach((p: any, i: number) => addMember(p, `気になる人 ${i+1}`));
+
     return members;
   };
 
