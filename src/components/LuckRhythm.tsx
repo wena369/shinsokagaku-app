@@ -23,7 +23,7 @@ const TimelineRow = ({ startIndex, endIndex, member, getTextColor }: any) => {
   // 生まれ年の単数変換数（DWCに割り当てられる基準となる数）
   const birthYearSum = birthDate.year % 9 === 0 ? 9 : birthDate.year % 9;
   
-  // 0歳の位置（波形上のインデックス）の算出
+  // 0歳の位置（波形上のインデックス 0:A 〜 8:I）の算出
   // 法則：「マスの数字が自身の運気数となる場所が0歳のスタート地点」
   // DWCのマス(idx=6)がbirthYearSumであり、右にいくほど数字が減るため、以下で算出可能
   const i_Age0 = (6 + birthYearSum - luckNumber + 9) % 9;
@@ -36,26 +36,27 @@ const TimelineRow = ({ startIndex, endIndex, member, getTextColor }: any) => {
   const nodes = [];
   for (let i = startIndex; i <= endIndex; i++) {
     const stepIdx = i - startIndex;
-    const age = i - i_Age0;
+    
+    // ループインデックス i をそのまま実年齢（age）として扱う
+    const age = i;
     const year = birthDate.year + age;
     
-    // 年齢に基づくカウントダウンの単数変換
-    // DWC（i=6や15等）の位置の時に必ずbirthYearSumになり、右へ進むほど数字が減る
-    let bioNum = (birthYearSum - (i - 6)) % 9;
+    // 0歳時点のインデックス i_Age0 から年齢の分だけシフトした現在の波形位置 (0:A 〜 8:I) を算出
+    const currentIdx = (i_Age0 + age) % 9;
+    
+    // Y座標のプロットを現在の波形位置に基づいて決定
+    const cy = currentIdx <= 4 ? 60 + currentIdx * 25 : 160 - (currentIdx - 4) * 20;
+    
+    // 年齢に基づく運気数（DWCである G (idx=6) の時に必ず birthYearSum になり、右へ進むほど減る）
+    let bioNum = (birthYearSum - (currentIdx - 6)) % 9;
     if (bioNum <= 0) bioNum += 9;
     
     const cx = paddingX + stepIdx * stepWidth;
     
-    // グローバルインデックスから波形の固定位置を算出 (0:A, 1:B ... 8:I)
-    const currentIdx = i % 9;
-    // Y coords mapping to match 9-step visualization using currentIdx
-    const cy = currentIdx <= 4 ? 60 + currentIdx * 25 : 160 - (currentIdx - 4) * 20;
-    
     let type = 'white';
-    if (i === 0) type = 'double-white'; // The very first node on the entire chart is always marked Double-White
-    else if (currentIdx === 1 || currentIdx === 3) type = 'solid';
+    if (currentIdx === 1 || currentIdx === 3) type = 'solid';
     else if (currentIdx === 2) type = 'double-black';
-    else if (currentIdx === 6) type = 'double-white';
+    else if (currentIdx === 6) type = 'double-white'; // DWCポイントは常に二重白丸
     
     // 幸福大転換のポイント（DWC）にバッジを配置する
     const isMatch = currentIdx === 6 && age >= 0;
