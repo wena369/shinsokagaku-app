@@ -126,6 +126,80 @@ function App() {
           </div>
         )}
 
+        {(data.spouseFather.birthDate || data.spouseFather.manualShinso) && (
+          <div className="batch-page-portrait">
+            <ShinsoKarte name={data.spouseFather.name} birthDate={data.spouseFather.birthDate} manualShinso={data.spouseFather.manualShinso} relationship="義父" memo={memos["karte_spouseFather"] || ""} onMemoChange={(m) => updateMemo("karte_spouseFather", m)} isBatchPrinting={true} />
+          </div>
+        )}
+
+        {(data.spouseMother.birthDate || data.spouseMother.manualShinso) && (
+          <div className="batch-page-portrait">
+            <ShinsoKarte name={data.spouseMother.name} birthDate={data.spouseMother.birthDate} manualShinso={data.spouseMother.manualShinso} relationship="義母" memo={memos["karte_spouseMother"] || ""} onMemoChange={(m) => updateMemo("karte_spouseMother", m)} isBatchPrinting={true} />
+          </div>
+        )}
+
+        {(data.paternalGrandfather.birthDate || data.paternalGrandfather.manualShinso) && (
+          <div className="batch-page-portrait">
+            <ShinsoKarte name={data.paternalGrandfather.name} birthDate={data.paternalGrandfather.birthDate} manualShinso={data.paternalGrandfather.manualShinso} relationship="父方祖父" memo={memos["karte_pGF"] || ""} onMemoChange={(m) => updateMemo("karte_pGF", m)} isBatchPrinting={true} />
+          </div>
+        )}
+
+        {(data.paternalGrandmother.birthDate || data.paternalGrandmother.manualShinso) && (
+          <div className="batch-page-portrait">
+            <ShinsoKarte name={data.paternalGrandmother.name} birthDate={data.paternalGrandmother.birthDate} manualShinso={data.paternalGrandmother.manualShinso} relationship="父方祖母" memo={memos["karte_pGM"] || ""} onMemoChange={(m) => updateMemo("karte_pGM", m)} isBatchPrinting={true} />
+          </div>
+        )}
+
+        {(data.maternalGrandfather.birthDate || data.maternalGrandfather.manualShinso) && (
+          <div className="batch-page-portrait">
+            <ShinsoKarte name={data.maternalGrandfather.name} birthDate={data.maternalGrandfather.birthDate} manualShinso={data.maternalGrandfather.manualShinso} relationship="母方祖父" memo={memos["karte_mGF"] || ""} onMemoChange={(m) => updateMemo("karte_mGF", m)} isBatchPrinting={true} />
+          </div>
+        )}
+
+        {(data.maternalGrandmother.birthDate || data.maternalGrandmother.manualShinso) && (
+          <div className="batch-page-portrait">
+            <ShinsoKarte name={data.maternalGrandmother.name} birthDate={data.maternalGrandmother.birthDate} manualShinso={data.maternalGrandmother.manualShinso} relationship="母方祖母" memo={memos["karte_mGM"] || ""} onMemoChange={(m) => updateMemo("karte_mGM", m)} isBatchPrinting={true} />
+          </div>
+        )}
+
+        {data.siblings.filter((s: any) => s.birthDate || s.manualShinso).flatMap((s: any, i: number) => {
+          const cards = [];
+          cards.push(
+            <div className="batch-page-portrait" key={`batch-sibling-${i}`}>
+              <ShinsoKarte name={s.name} birthDate={s.birthDate} manualShinso={s.manualShinso} relationship={`兄弟姉妹 ${i+1}`} memo={memos[`karte_sib_${i}`] || ""} onMemoChange={(m) => updateMemo(`karte_sib_${i}`, m)} isBatchPrinting={true} />
+            </div>
+          );
+          if (s.spouse && (s.spouse.birthDate || s.spouse.manualShinso)) {
+            cards.push(
+              <div className="batch-page-portrait" key={`batch-sibling-${i}-spouse`}>
+                <ShinsoKarte name={s.spouse.name} birthDate={s.spouse.birthDate} manualShinso={s.spouse.manualShinso} relationship={`兄弟姉妹 ${i+1}の配偶者`} memo={memos[`karte_sib_${i}_spouse`] || ""} onMemoChange={(m) => updateMemo(`karte_sib_${i}_spouse`, m)} isBatchPrinting={true} />
+              </div>
+            );
+          }
+          if (s.children) {
+            s.children.filter((c: any) => c.birthDate || c.manualShinso).forEach((c: any, ci: number) => {
+              cards.push(
+                <div className="batch-page-portrait" key={`batch-sibling-${i}-child-${ci}`}>
+                  <ShinsoKarte name={c.name} birthDate={c.birthDate} manualShinso={c.manualShinso} relationship={`兄弟姉妹 ${i+1}の子 ${ci+1}`} memo={memos[`karte_sib_${i}_child_${ci}`] || ""} onMemoChange={(m) => updateMemo(`karte_sib_${i}_child_${ci}`, m)} isBatchPrinting={true} />
+                </div>
+              );
+            });
+          }
+          return cards;
+        })}
+
+        {data.grandchildren.filter((g: any) => g.birthDate || g.manualShinso).map((g: any, i: number) => (
+          <div className="batch-page-portrait" key={`batch-grandchild-${i}`}>
+            <ShinsoKarte name={g.name} birthDate={g.birthDate} manualShinso={g.manualShinso} relationship={`孫 ${i+1}`} memo={memos[`karte_grandchild_${i}`] || ""} onMemoChange={(m) => updateMemo(`karte_grandchild_${i}`, m)} isBatchPrinting={true} />
+          </div>
+        ))}
+
+        {data.interestedPeople.filter((p: any) => p.birthDate || p.manualShinso).map((p: any, i: number) => (
+          <div className="batch-page-portrait" key={`batch-interested-${i}`}>
+            <ShinsoKarte name={p.name} birthDate={p.birthDate} manualShinso={p.manualShinso} relationship={`気になる人 ${i+1}`} memo={memos[`karte_int_${i}`] || ""} onMemoChange={(m) => updateMemo(`karte_int_${i}`, m)} isBatchPrinting={true} />
+          </div>
+        ))}
+
         {/* 4. 循環図 (CirculationDiagram) */}
         <div className="batch-page-portrait">
           <CirculationDiagram data={data} memo={memos["circulation"] || ""} onMemoChange={(m) => updateMemo("circulation", m)} isBatchPrinting={true} />
