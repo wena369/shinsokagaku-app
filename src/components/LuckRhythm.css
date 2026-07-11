@@ -303,6 +303,10 @@
     margin-top: -15mm !important; /* さらに上に引き上げる */
   }
 
+  .timeline-view .timeline-svg-wrapper {
+    zoom: 1 !important;
+  }
+
   .timeline-header {
     margin-bottom: 0.5rem !important; /* 余白を削る */
   }
