@@ -296,18 +296,35 @@
     overflow: visible !important;
   }
 
-  /* タイムラインビュー（自分年表）の全体をさらに縮小して4段すべてを確実にA4横(188mm)に収める */
+  /* タイムラインビュー（自分年表）のズームを完全に廃止し、直接サイズ制限を行う */
   .timeline-view {
-    width: 208.3% !important; /* 100% / 0.48 */
-    height: 391mm !important; /* 188mm / 0.48 */
-    transform: scale(0.48) !important;
-    transform-origin: top left !important;
-    margin-top: -15mm !important; /* さらに上に引き上げる */
-    margin-bottom: -203mm !important; /* 元の高さ 391mm - 縮小後の高さ 188mm = 203mm */
+    width: 100% !important;
+    height: auto !important;
+    transform: none !important;
+    transform-origin: center !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* 各段の余白を小さくする（インラインスタイルを上書き） */
+  .timeline-view .waterfall-timeline-container > div {
+    margin-bottom: 3mm !important;
+    padding-bottom: 2mm !important;
+  }
+
+  /* SVGの縦幅を直接制限し、横幅はアスペクト比を維持させて自動計算 */
+  .timeline-view .timeline-svg {
+    height: 25mm !important;
+    width: auto !important;
+    max-width: 100% !important;
+    min-width: 0 !important; /* 親で設定されていた min-width: 1100px を打ち消す */
+    margin: 0 auto !important;
+    display: block !important;
   }
 
   .timeline-view .timeline-svg-wrapper {
     zoom: 1 !important;
+    overflow: visible !important;
   }
 
   .timeline-header {
