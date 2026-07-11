@@ -296,14 +296,13 @@
     overflow: visible !important;
   }
 
-  /* タイムラインビュー（自分年表）のズームを完全に廃止し、直接サイズ制限を行う */
+  /* タイムラインビュー（自分年表）のズームを完全に廃止し、コンテナ幅を65%に制限して縮小 */
   .timeline-view {
-    width: 100% !important;
+    width: 65% !important; /* 幅を65%に制限し、高さをアスペクト比で自動縮小 */
     height: auto !important;
     transform: none !important;
     transform-origin: center !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
+    margin: 0 auto !important; /* 中央寄せ */
   }
 
   /* 各段の余白を小さくする（インラインスタイルを上書き） */
@@ -312,10 +311,10 @@
     padding-bottom: 2mm !important;
   }
 
-  /* SVGの縦幅を直接制限し、横幅はアスペクト比を維持させて自動計算 */
+  /* SVGの幅と高さをブラウザに最も安定な「100% / auto」に戻す */
   .timeline-view .timeline-svg {
-    height: 25mm !important;
-    width: auto !important;
+    width: 100% !important;
+    height: auto !important;
     max-width: 100% !important;
     min-width: 0 !important; /* 親で設定されていた min-width: 1100px を打ち消す */
     margin: 0 auto !important;
