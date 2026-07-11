@@ -134,6 +134,11 @@ h1, h2, h3, .shinso-number {
     margin: 10mm;
   }
 
+  @page portrait-view {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
   @page portrait-view-bleed {
     size: A4 portrait;
     margin: 0;
@@ -144,8 +149,9 @@ h1, h2, h3, .shinso-number {
     margin: 0;
   }
 
-  /* 縦向き用のコンテナ（余白あり・デフォルト設定を利用するため page 指定なし） */
+  /* 縦向き用のコンテナ（余白あり・名前付きページバグ回避のため明示指定） */
   .batch-page-portrait {
+    page: portrait-view;
     background: white;
     height: 275mm !important;
     max-height: 275mm !important;
