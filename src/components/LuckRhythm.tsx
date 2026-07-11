@@ -10,6 +10,7 @@ interface Props {
   onMemoChange?: (val: string) => void;
   isBatchPrinting?: boolean;
   batchTab?: 'cycle' | 'timeline';
+  targetMemberLabel?: string; // 一括印刷などで特定のメンバーを指定して描画するためのプロパティ
 }
 
 // ----------------------------------------------------
@@ -62,7 +63,6 @@ const TimelineRow = ({ startIndex, endIndex, member, getTextColor }: any) => {
     const isMatch = currentIdx === 6 && age >= 0;
     nodes.push({ age, year, bioNum, cx, cy, type, isMatch });
   }
-
   return (
     <div style={{ marginBottom: '1.5rem', borderBottom: '1px dashed #cbd5e1', paddingBottom: '1rem' }}>
       <div className="timeline-svg-wrapper">
@@ -142,9 +142,10 @@ const TimelineRow = ({ startIndex, endIndex, member, getTextColor }: any) => {
 };
 // ----------------------------------------------------
 
-const LuckRhythm: React.FC<Props> = ({ data, memo = "", onMemoChange, isBatchPrinting = false, batchTab }) => {
+const LuckRhythm: React.FC<Props> = ({ data, memo = "", onMemoChange, isBatchPrinting = false, batchTab, targetMemberLabel }) => {
   const [activeSubTab, setActiveSubTab] = useState<'cycle' | 'timeline'>('cycle');
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [selectedMemberLabel, setSelectedMemberLabel] = useState<string>("本人");
 
   const currentTab = isBatchPrinting && batchTab ? batchTab : activeSubTab;
 
@@ -208,6 +209,9 @@ const LuckRhythm: React.FC<Props> = ({ data, memo = "", onMemoChange, isBatchPri
   };
 
   const rawMembers = getAllMembers();
+  
+  const activeMemberLabel = isBatchPrinting && targetMemberLabel ? targetMemberLabel : selectedMemberLabel;
+  const activeMember = rawMembers.find(m => m.label === activeMemberLabel) || rawMembers.find(m => m.label === "本人") || rawMembers[0];
   
   // Calculate stack indices to prevent overlapping names
   // Also duplicate members at posIdx 0 (A) to posIdx 9 (J)
@@ -393,18 +397,36 @@ const LuckRhythm: React.FC<Props> = ({ data, memo = "", onMemoChange, isBatchPri
         </div>
       ) : (
         <div className="timeline-view" id="luck-personal-timeline">
+           {/* メンバー切り替えセレクトボックス（通常画面のみ表示） */}
+           {!isBatchPrinting && rawMembers.length > 1 && (
+             <div className="member-selector-row print-hide" style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
+               <span style={{ marginRight: '0.5rem', fontWeight: 'bold' }}>表示対象メンバー:</span>
+               <select 
+                 value={selectedMemberLabel} 
+                 onChange={(e) => setSelectedMemberLabel(e.target.value)}
+                 style={{ padding: '0.4rem 0.8rem', borderRadius: '4px', border: '1px solid #cbd5e1', fontSize: '0.9rem', background: 'white' }}
+               >
+                 {rawMembers.map((m, idx) => (
+                   <option key={idx} value={m.label}>
+                     {m.name ? `${m.name} (${m.label})` : m.label}
+                   </option>
+                 ))}
+               </select>
+             </div>
+           )}
+
            <div className="timeline-header" style={{ textAlign: 'center', marginBottom: '2rem' }}>
-             <h3 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '0.4rem' }}>心相科学理論 バイオリズム年表（{data.self.name || "　　"} 用）</h3>
+             <h3 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '0.4rem' }}>心相科学理論 バイオリズム年表（{activeMember?.name || "　　"} 用）</h3>
              <p style={{ fontSize: '0.9rem', color: '#475569', fontWeight: 'bold' }}>
                ご自身のバイオリズム図です。プリントアウトして、各年齢で起きた出来事を記載していきましょう。
              </p>
            </div>
            
            <div className="waterfall-timeline-container" style={{ padding: '0', maxWidth: '100%', overflowX: 'auto' }}>
-             <TimelineRow startIndex={0} endIndex={27} member={members.find(m => m.label === "本人") || members[0]} getTextColor={getTextColor} />
-             <TimelineRow startIndex={27} endIndex={54} member={members.find(m => m.label === "本人") || members[0]} getTextColor={getTextColor} />
-             <TimelineRow startIndex={54} endIndex={81} member={members.find(m => m.label === "本人") || members[0]} getTextColor={getTextColor} />
-             <TimelineRow startIndex={81} endIndex={108} member={members.find(m => m.label === "本人") || members[0]} getTextColor={getTextColor} />
+             <TimelineRow startIndex={0} endIndex={27} member={activeMember} getTextColor={getTextColor} />
+             <TimelineRow startIndex={27} endIndex={54} member={activeMember} getTextColor={getTextColor} />
+             <TimelineRow startIndex={54} endIndex={81} member={activeMember} getTextColor={getTextColor} />
+             <TimelineRow startIndex={81} endIndex={108} member={activeMember} getTextColor={getTextColor} />
            </div>
         </div>
       )}

@@ -211,9 +211,36 @@ function App() {
         </div>
 
         {/* 6. 自分年表 (LuckRhythm timeline) - タイムラインも横向きが最適 */}
+        {/* 本人 */}
         <div className="batch-page-landscape">
-          <LuckRhythm data={data} memo="" onMemoChange={undefined} isBatchPrinting={true} batchTab="timeline" />
+          <LuckRhythm data={data} memo="" onMemoChange={undefined} isBatchPrinting={true} batchTab="timeline" targetMemberLabel="本人" />
         </div>
+        
+        {/* 配偶者 */}
+        {(data.spouse.birthDate || data.spouse.manualShinso) && (
+          <div className="batch-page-landscape">
+            <LuckRhythm data={data} memo="" onMemoChange={undefined} isBatchPrinting={true} batchTab="timeline" targetMemberLabel="配偶者" />
+          </div>
+        )}
+
+        {/* 子供 */}
+        {data.children.filter((c: any) => c.birthDate || c.manualShinso).map((_, i: number) => (
+          <div className="batch-page-landscape" key={`batch-timeline-child-${i}`}>
+            <LuckRhythm data={data} memo="" onMemoChange={undefined} isBatchPrinting={true} batchTab="timeline" targetMemberLabel={`子供 ${i+1}`} />
+          </div>
+        ))}
+
+        {/* 両親 */}
+        {(data.father.birthDate || data.father.manualShinso) && (
+          <div className="batch-page-landscape">
+            <LuckRhythm data={data} memo="" onMemoChange={undefined} isBatchPrinting={true} batchTab="timeline" targetMemberLabel="父親" />
+          </div>
+        )}
+        {(data.mother.birthDate || data.mother.manualShinso) && (
+          <div className="batch-page-landscape">
+            <LuckRhythm data={data} memo="" onMemoChange={undefined} isBatchPrinting={true} batchTab="timeline" targetMemberLabel="母親" />
+          </div>
+        )}
 
         {/* 7. 相性鑑定 (CompatibilityCheck) */}
         <div className="batch-page-portrait">
