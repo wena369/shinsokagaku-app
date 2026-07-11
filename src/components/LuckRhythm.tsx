@@ -110,28 +110,39 @@ const TimelineRow = ({ startIndex, endIndex, member, getTextColor }: any) => {
             
             {/* Tag when lucky! */}
             {n.isMatch && (
-              <foreignObject x={n.cx - 40} y={n.cy - 60} width="80" height="40">
-                <div style={{
-                  backgroundColor: safeMember.luckColor || '#10b981',
-                  color: getTextColor(safeMember.luckColor),
-                  fontSize: '10px',
-                  fontWeight: 'bold',
-                  borderRadius: '6px',
-                  textAlign: 'center',
-                  lineHeight: '1.2',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-                  border: '1px solid rgba(0,0,0,0.1)',
-                  padding: '2px 4px',
-                  width: '100%',
-                  height: '100%',
-                  boxSizing: 'border-box',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  {safeMember.name || "運気数"}<br/>幸福大転換
-                </div>
-              </foreignObject>
+              <g className="lucky-badge">
+                <rect 
+                  x={n.cx - 40} 
+                  y={n.cy - 50} 
+                  width="80" 
+                  height="34" 
+                  rx="6" 
+                  ry="6" 
+                  fill={safeMember.luckColor || '#10b981'} 
+                  stroke="rgba(0,0,0,0.1)"
+                  strokeWidth="1"
+                />
+                <text 
+                  x={n.cx} 
+                  y={n.cy - 38} 
+                  textAnchor="middle" 
+                  fontSize="10" 
+                  fontWeight="bold" 
+                  fill={getTextColor(safeMember.luckColor)}
+                >
+                  {safeMember.name || "運気数"}
+                </text>
+                <text 
+                  x={n.cx} 
+                  y={n.cy - 24} 
+                  textAnchor="middle" 
+                  fontSize="10" 
+                  fontWeight="bold" 
+                  fill={getTextColor(safeMember.luckColor)}
+                >
+                  幸福大転換
+                </text>
+              </g>
             )}
           </g>
         ))}
@@ -362,18 +373,34 @@ const LuckRhythm: React.FC<Props> = ({ data, memo = "", onMemoChange, isBatchPri
                 const px = p?.x || 50;
                 const py = p?.y || 80;
                 
+                const bgColor = m.luckColor || (idx % 2 === 0 ? '#3b82f6' : '#10b981');
+                
                 return (
                   <g key={idx} className="member-marker">
-                    <g transform={`translate(${px - 50}, ${yOffset})`}>
-                      <foreignObject x="0" y="0" width="100" height="30">
-                        <div className="member-avatar-tag" style={{ backgroundColor: m.luckColor || (idx % 2 === 0 ? '#3b82f6' : '#10b981'), color: getTextColor(m.luckColor), width: '100%', height: '100%', boxSizing: 'border-box', margin: 0, transform: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          {m.name || m.label}
-                        </div>
-                      </foreignObject>
-                    </g>
+                    <rect 
+                      x={px - 50} 
+                      y={yOffset} 
+                      width="100" 
+                      height="26" 
+                      rx="6" 
+                      ry="6" 
+                      fill={bgColor} 
+                      stroke="rgba(0,0,0,0.1)"
+                      strokeWidth="1"
+                    />
+                    <text 
+                      x={px} 
+                      y={yOffset + 17} 
+                      textAnchor="middle" 
+                      fontSize="11" 
+                      fontWeight="bold" 
+                      fill={getTextColor(bgColor)}
+                    >
+                      {m.name || m.label}
+                    </text>
                     {/* Connecting line to the point only on the first member */}
                     {m.stackOrder === 0 && (
-                      <line x1={px} y1={py} x2={px} y2={yOffset + 30} stroke="#94a3b8" strokeWidth="1" />
+                      <line x1={px} y1={py} x2={px} y2={yOffset + 26} stroke="#94a3b8" strokeWidth="1" />
                     )}
                   </g>
                 );
