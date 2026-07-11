@@ -16,8 +16,9 @@ interface Props {
 // New: Timeline Row Component for "自分年表"
 // ----------------------------------------------------
 const TimelineRow = ({ startIndex, endIndex, member, getTextColor }: any) => {
-  const birthDate = member.birthDate ? parseDate(member.birthDate) : { year: 1980, month: 1, day: 1 };
-  const luckNumber = member.luckNumber || 9; // この「運気数」が直接的にオフセットを決定します
+  const safeMember = member || { name: '本人', birthDate: '1980-01-01', luckNumber: 9, luckColor: '#10b981' };
+  const birthDate = safeMember.birthDate ? parseDate(safeMember.birthDate) : { year: 1980, month: 1, day: 1 };
+  const luckNumber = safeMember.luckNumber || 9; // この「運気数」が直接的にオフセットを決定します
   
   // 生まれ年の単数変換数（DWCに割り当てられる基準となる数）
   const birthYearSum = birthDate.year % 9 === 0 ? 9 : birthDate.year % 9;
@@ -110,8 +111,8 @@ const TimelineRow = ({ startIndex, endIndex, member, getTextColor }: any) => {
             {n.isMatch && (
               <foreignObject x={n.cx - 40} y={n.cy - 60} width="80" height="40">
                 <div style={{
-                  backgroundColor: member.luckColor || '#10b981',
-                  color: getTextColor(member.luckColor),
+                  backgroundColor: safeMember.luckColor || '#10b981',
+                  color: getTextColor(safeMember.luckColor),
                   fontSize: '10px',
                   fontWeight: 'bold',
                   borderRadius: '6px',
@@ -127,7 +128,7 @@ const TimelineRow = ({ startIndex, endIndex, member, getTextColor }: any) => {
                   alignItems: 'center',
                   justifyContent: 'center'
                 }}>
-                  {member.name || "運気数"}<br/>幸福大転換
+                  {safeMember.name || "運気数"}<br/>幸福大転換
                 </div>
               </foreignObject>
             )}
