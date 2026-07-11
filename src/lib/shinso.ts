@@ -309,6 +309,8 @@ export interface FamilyMember {
   birthDate: string; // ISO format YYYY-MM-DD
   gender: 'male' | 'female';
   manualShinso?: string; // 3 digits like "123"
+  spouse?: FamilyMember;
+  children?: FamilyMember[];
 }
 
 export interface FamilyData {
@@ -350,8 +352,18 @@ export const INITIAL_FAMILY_DATA: FamilyData = {
   spouse: { ...INITIAL_MEMBER },
   spouseFather: { ...INITIAL_MEMBER },
   spouseMother: { ...INITIAL_MEMBER },
-  siblings: Array(4).fill(null).map(() => ({ ...INITIAL_MEMBER })),
-  spouseSiblings: Array(4).fill(null).map(() => ({ ...INITIAL_MEMBER })),
+  siblings: Array(4).fill(null).map(() => ({
+    ...INITIAL_MEMBER,
+    gender: 'male',
+    spouse: { ...INITIAL_MEMBER, gender: 'female' },
+    children: Array(4).fill(null).map(() => ({ ...INITIAL_MEMBER, gender: 'male' }))
+  })),
+  spouseSiblings: Array(4).fill(null).map(() => ({
+    ...INITIAL_MEMBER,
+    gender: 'male',
+    spouse: { ...INITIAL_MEMBER, gender: 'female' },
+    children: Array(4).fill(null).map(() => ({ ...INITIAL_MEMBER, gender: 'male' }))
+  })),
   children: Array(6).fill(null).map(() => ({ ...INITIAL_MEMBER })),
   grandchildren: Array(6).fill(null).map(() => ({ ...INITIAL_MEMBER })),
   interestedPeople: Array(4).fill(null).map(() => ({ ...INITIAL_MEMBER })),

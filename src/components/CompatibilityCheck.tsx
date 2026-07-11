@@ -26,30 +26,32 @@ const DateInputWithPicker = ({ value, onChange, className, style }: { value: str
     <div style={{ position: 'relative', display: 'flex', alignItems: 'center', width: '100%', ...style }}>
       <input
         type="text"
-        inputMode="numeric"
         placeholder="例: 1980-01-01"
         className={className}
         style={{ paddingRight: '2rem', width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '4px' }}
-        value={value}
+        value={value || ''}
         onChange={(e) => {
-          let val = e.target.value.replace(/[^0-9]/g, '');
-          if (val.length > 8) val = val.slice(0, 8);
-          
-          let formatted = val;
-          if (val.length >= 5) {
-            formatted = val.slice(0, 4) + '-' + val.slice(4);
+          const val = e.target.value;
+          const digits = val.replace(/[^0-9]/g, '');
+          if (digits.length === 8 && val.length === 8) {
+            onChange(`${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`);
+          } else {
+            onChange(val);
           }
-          if (val.length >= 7) {
-            formatted = val.slice(0, 4) + '-' + val.slice(4, 6) + '-' + val.slice(6);
+        }}
+        onBlur={(e) => {
+          const val = e.target.value;
+          const digits = val.replace(/[^0-9]/g, '');
+          if (digits.length === 8) {
+            onChange(`${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`);
           }
-          onChange(formatted);
         }}
       />
       <div style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '24px', height: '24px', overflow: 'hidden' }}>
         <input 
           type="date" 
           style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', width: '100%', height: '100%', transform: 'scale(2)' }}
-          value={value}
+          value={value || ''}
           onChange={(e) => onChange(e.target.value)}
         />
         <svg style={{ width: '20px', height: '20px', color: '#9ca3af', pointerEvents: 'none' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">

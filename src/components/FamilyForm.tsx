@@ -13,30 +13,32 @@ const DateInputWithPicker = ({ value, onChange, className }: { value: string, on
     <div style={{ position: 'relative', display: 'flex', alignItems: 'center', width: '100%' }}>
       <input
         type="text"
-        inputMode="numeric"
         placeholder="例: 1980-01-01"
         className={className}
         style={{ paddingRight: '2rem', width: '100%' }}
-        value={value}
+        value={value || ''}
         onChange={(e) => {
-          let val = e.target.value.replace(/[^0-9]/g, '');
-          if (val.length > 8) val = val.slice(0, 8);
-          
-          let formatted = val;
-          if (val.length >= 5) {
-            formatted = val.slice(0, 4) + '-' + val.slice(4);
+          const val = e.target.value;
+          const digits = val.replace(/[^0-9]/g, '');
+          if (digits.length === 8 && val.length === 8) {
+            onChange(`${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`);
+          } else {
+            onChange(val);
           }
-          if (val.length >= 7) {
-            formatted = val.slice(0, 4) + '-' + val.slice(4, 6) + '-' + val.slice(6);
+        }}
+        onBlur={(e) => {
+          const val = e.target.value;
+          const digits = val.replace(/[^0-9]/g, '');
+          if (digits.length === 8) {
+            onChange(`${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`);
           }
-          onChange(formatted);
         }}
       />
       <div style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '24px', height: '24px', overflow: 'hidden' }}>
         <input 
           type="date" 
           style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', width: '100%', height: '100%', transform: 'scale(2)' }}
-          value={value}
+          value={value || ''}
           onChange={(e) => onChange(e.target.value)}
         />
         <svg style={{ width: '20px', height: '20px', color: '#9ca3af', pointerEvents: 'none' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -52,15 +54,40 @@ const FamilyForm: React.FC<Props> = ({ data, onChange }) => {
 
   const updateMember = (path: string, field: string, value: string) => {
     const newData = { ...data };
-    if (path.includes('.')) {
-      const parts = path.split('.');
-      const parentName = parts[0] as keyof FamilyData;
-      const index = parseInt(parts[1], 10);
-      const list = [...(newData[parentName] as any[])];
-      list[index] = { ...list[index], [field]: value };
-      (newData as any)[parentName] = list;
-    } else {
-      (newData as any)[path] = { ...(newData as any)[path], [field]: value };
+    const parts = path.split('.');
+    
+    if (parts.length === 1) {
+      const key = parts[0] as keyof FamilyData;
+      newData[key] = { ...(newData[key] as any), [field]: value };
+    } else if (parts.length === 2) {
+      const key = parts[0] as keyof FamilyData;
+      const idx = parseInt(parts[1], 10);
+      const arr = [...(newData[key] as any[])];
+      arr[idx] = { ...arr[idx], [field]: value };
+      (newData as any)[key] = arr;
+    } else if (parts.length === 3) {
+      const key = parts[0] as keyof FamilyData;
+      const idx = parseInt(parts[1], 10);
+      const subKey = parts[2];
+      const arr = [...(newData[key] as any[])];
+      arr[idx] = {
+        ...arr[idx],
+        [subKey]: { ...(arr[idx][subKey] || {}), [field]: value }
+      };
+      (newData as any)[key] = arr;
+    } else if (parts.length === 4) {
+      const key = parts[0] as keyof FamilyData;
+      const idx = parseInt(parts[1], 10);
+      const subKey = parts[2];
+      const subIdx = parseInt(parts[3], 10);
+      const arr = [...(newData[key] as any[])];
+      const subArr = [...(arr[idx][subKey] || [])];
+      subArr[subIdx] = { ...subArr[subIdx], [field]: value };
+      arr[idx] = {
+        ...arr[idx],
+        [subKey]: subArr
+      };
+      (newData as any)[key] = arr;
     }
     onChange(newData);
   };
@@ -87,7 +114,7 @@ const FamilyForm: React.FC<Props> = ({ data, onChange }) => {
               <label>お名前（または呼称）</label>
               <input 
                 type="text" 
-                value={member.name} 
+                value={member.name || ''} 
                 onChange={(e: ChangeEvent<HTMLInputElement>) => updateMember(path, 'name', e.target.value)}
                 placeholder="例：山田 太郎 / お父さん"
               />
@@ -117,7 +144,7 @@ const FamilyForm: React.FC<Props> = ({ data, onChange }) => {
               <div className="input-row">
                 <label>生年月日</label>
                 <DateInputWithPicker 
-                  value={member.birthDate} 
+                  value={member.birthDate || ''} 
                   onChange={(val) => updateMember(path, 'birthDate', val)}
                 />
               </div>
@@ -132,6 +159,89 @@ const FamilyForm: React.FC<Props> = ({ data, onChange }) => {
                 />
               </div>
             </div>
+
+            {/* 兄弟姉妹・義兄弟姉妹の配偶者と子供のネスト入力 */}
+            {(id.startsWith('siblings-') || id.startsWith('spouseSiblings-')) && (
+              <div className="nested-family-section" style={{ marginTop: '1.5rem', borderTop: '1px dashed #cbd5e1', paddingTop: '1.5rem' }}>
+                <h4 style={{ fontSize: '14px', fontWeight: 'bold', color: '#475569', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Heart size={16} style={{ color: '#ec4899' }} /> 配偶者と子供の情報
+                </h4>
+                
+                {/* 配偶者入力 */}
+                <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '6px', marginBottom: '1rem', border: '1px solid #f1f5f9' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#64748b', display: 'block', marginBottom: '0.8rem' }}>配偶者</span>
+                  <div className="input-row">
+                    <label>お名前（または呼称）</label>
+                    <input 
+                      type="text" 
+                      value={member.spouse?.name || ''} 
+                      onChange={(e) => updateMember(`${path}.spouse`, 'name', e.target.value)}
+                      placeholder="例：義兄 / 義姉"
+                    />
+                  </div>
+                  <div className="input-fields-grid">
+                    <div className="input-row">
+                      <label>生年月日</label>
+                      <DateInputWithPicker 
+                        value={member.spouse?.birthDate || ''} 
+                        onChange={(val) => updateMember(`${path}.spouse`, 'birthDate', val)}
+                      />
+                    </div>
+                    <div className="input-row">
+                      <label>心相数 <small>(手動)</small></label>
+                      <input 
+                        type="text" 
+                        maxLength={3}
+                        value={member.spouse?.manualShinso || ''} 
+                        onChange={(e) => updateMember(`${path}.spouse`, 'manualShinso', e.target.value)}
+                        placeholder="3桁"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 子供入力 */}
+                <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '6px', border: '1px solid #f1f5f9' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#64748b', display: 'block', marginBottom: '0.8rem' }}>子供（4人まで）</span>
+                  {Array.from({ length: 4 }).map((_, ci) => {
+                    const child = member.children?.[ci] || { name: '', birthDate: '', manualShinso: '' };
+                    return (
+                      <div key={ci} style={{ marginBottom: ci < 3 ? '1rem' : 0, paddingBottom: ci < 3 ? '1rem' : 0, borderBottom: ci < 3 ? '1px dashed #e2e8f0' : 'none' }}>
+                        <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#94a3b8', display: 'block', marginBottom: '0.5rem' }}>子供 {ci + 1}</span>
+                        <div className="input-row">
+                          <label>お名前（または呼称）</label>
+                          <input 
+                            type="text" 
+                            value={child.name || ''} 
+                            onChange={(e) => updateMember(`${path}.children.${ci}`, 'name', e.target.value)}
+                            placeholder={`例：子供 ${ci + 1}`}
+                          />
+                        </div>
+                        <div className="input-fields-grid">
+                          <div className="input-row">
+                            <label>生年月日</label>
+                            <DateInputWithPicker 
+                              value={child.birthDate || ''} 
+                              onChange={(val) => updateMember(`${path}.children.${ci}`, 'birthDate', val)}
+                            />
+                          </div>
+                          <div className="input-row">
+                            <label>心相数 <small>(手動)</small></label>
+                            <input 
+                              type="text" 
+                              maxLength={3}
+                              value={child.manualShinso || ''} 
+                              onChange={(e) => updateMember(`${path}.children.${ci}`, 'manualShinso', e.target.value)}
+                              placeholder="3桁"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -195,11 +305,11 @@ const FamilyForm: React.FC<Props> = ({ data, onChange }) => {
         <div className="parents-grid">
           <div className="parents-col">
             <h3 className="sub-header">あなたの兄弟姉妹</h3>
-            {renderListGroup("兄弟姉妹", "siblings", 2, <Users size={18} />, "siblings")}
+            {renderListGroup("兄弟姉妹", "siblings", 4, <Users size={18} />, "siblings")}
           </div>
           <div className="parents-col">
             <h3 className="sub-header">配偶者の兄弟姉妹</h3>
-            {renderListGroup("義兄弟姉妹", "spouseSiblings", 2, <Users size={18} />, "spouseSiblings")}
+            {renderListGroup("義兄弟姉妹", "spouseSiblings", 4, <Users size={18} />, "spouseSiblings")}
           </div>
         </div>
         
