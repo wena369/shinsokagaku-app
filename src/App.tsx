@@ -10,6 +10,7 @@ import { type FamilyData, INITIAL_FAMILY_DATA } from './lib/shinso';
 import { LayoutDashboard, Network, FileText, RefreshCw, TrendingUp, Heart, Printer } from 'lucide-react';
 import ShinsoDNAModel from './components/ShinsoDNAModel';
 import DataLoaderModal from './components/DataLoaderModal';
+import DataManager from './components/DataManager';
 import './App.css';
 
 type Tab = 'input' | 'tree' | 'karte' | 'circulation' | 'luck' | 'compatibility';
@@ -210,10 +211,31 @@ function App() {
         <div className="content-inner">
           {activeTab === 'input' && (
             <div>
-               <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }} className="print-hide">
+               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }} className="print-hide">
+                 <DataManager 
+                   data={data} 
+                   familyName={familyName} 
+                   onLoad={(name, fdata) => {
+                     setFamilyName(name);
+                     setData(fdata);
+                     // 気になる人が入力されている場合、相性判定の「相手」に反映
+                     const validPartner = fdata.interestedPeople?.find((p: any) => p.name || p.birthDate);
+                     if (validPartner) {
+                       setCompatibilityPartner({
+                         name: validPartner.name || '',
+                         gender: validPartner.gender || 'female',
+                         birthDate: validPartner.birthDate || '',
+                         manualShinso: validPartner.manualShinso || ''
+                       });
+                     }
+                   }}
+                   onFamilyNameChange={setFamilyName}
+                   initialFamilyData={INITIAL_FAMILY_DATA}
+                 />
+                 
                  <button 
                    onClick={() => setIsDataLoaderOpen(true)} 
-                   style={{ background: '#059669', color: 'white', padding: '8px 16px', borderRadius: '4px', border: 'none', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}
+                   style={{ background: '#059669', color: 'white', padding: '8px 16px', borderRadius: '4px', border: 'none', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', height: 'fit-content' }}
                  >
                     LP申込データ読込
                  </button>
